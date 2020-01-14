@@ -42,7 +42,12 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> findAll() {
-        return repository.findAll();
+    public List<Note> findAllByOrOrderByDateAsc() {
+        return repository.findAllByOrderByDateAsc();
+    }
+
+    @Override
+    public List<Note> findAllByOrOrderByDateDesc() {
+        return repository.findAllByOrderByDateDesc();
     }
 }

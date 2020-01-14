@@ -11,5 +11,7 @@ public interface NoteService {
     void save(Note note);
     void update(Integer id, String message, boolean done);
     void delete(Integer id);
-    List<Note> findAll();
+
+    List<Note> findAllByOrOrderByDateAsc();
+    List<Note> findAllByOrOrderByDateDesc();
 }

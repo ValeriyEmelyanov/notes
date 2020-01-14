@@ -7,6 +7,8 @@
 * MySql
 * Thymeleaf
 * Bootstrap
+* Maven
+* Tomcat
 
 
 ### Проблемы и их решения

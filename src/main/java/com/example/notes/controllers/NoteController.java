@@ -16,6 +16,7 @@ import java.util.List;
 public class NoteController {
 
     private NoteService noteService;
+    private String sortDateMethod = "ASC";
 
     @Autowired
     public void setNoteService(NoteService noteService) {
@@ -24,9 +25,24 @@ public class NoteController {
 
     @GetMapping("/")
     public String list(Model model) {
-        List<Note> notes = noteService.findAll();
+        List<Note> notes = getList();
         model.addAttribute("notes", notes);
+        model.addAttribute("sortDate", sortDateMethod);
         return "index";
+    }
+
+    @GetMapping("/sort/{sortDate}")
+    public String sortChoose(@PathVariable String sortDate, Model model) {
+        sortDateMethod = sortDate;
+        return list(model);
+    }
+
+    private List<Note> getList() {
+        if (sortDateMethod != null && sortDateMethod.toUpperCase().equals("DESC")) {
+            return noteService.findAllByOrOrderByDateDesc();
+        } else {
+            return noteService.findAllByOrOrderByDateAsc();
+        }
     }
 
     @GetMapping("/new")
