@@ -3,9 +3,9 @@ package com.example.notes.services;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -42,12 +42,17 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> findAllByOrOrderByDateAsc() {
-        return repository.findAllByOrderByDateAsc();
+    public Page<Note> findAllByOrOrderByDateAsc(Pageable pageable) {
+        return repository.findAllByOrderByDateAsc(pageable);
     }
 
     @Override
-    public List<Note> findAllByOrOrderByDateDesc() {
-        return repository.findAllByOrderByDateDesc();
+    public Page<Note> findAllByOrOrderByDateDesc(Pageable pageable) {
+        return repository.findAllByOrderByDateDesc(pageable);
+    }
+
+    @Override
+    public Page<Note> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

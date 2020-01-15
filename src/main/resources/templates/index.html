@@ -6,7 +6,7 @@
 
 <div class="container">
     <div th:replace="fragments/header :: header"></div>
-    <div th:if="${not #lists.isEmpty(notes)}">
+    <div th:if="${not #lists.isEmpty(page.content)}">
         <div th:replace="operations/list :: notes"></div>
     </div>
     <div th:replace="fragments/footer :: footer"></div>

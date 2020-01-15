@@ -25,3 +25,4 @@ MySql
 
 CRUD
 * <a href="https://www.youtube.com/watch?v=e7swABdqOS4">Создание CRUD приложения на языке Java с помощью Spring <b>Eugene Suleimanov</b></a>
+* <a href="https://www.logicbig.com/tutorials/spring-framework/spring-data/pagination-with-thymeleaf.html">Spring Data JPA - Pagination With Thymeleaf View</b></a>

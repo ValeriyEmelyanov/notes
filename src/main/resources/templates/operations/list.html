@@ -18,7 +18,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="note : ${notes}">
+<!--        <tr th:each="note : ${notes}">-->
+        <tr th:each="note : ${page.content}">
             <td th:text="${note.id}" style="text-align: center">#</td>
             <td th:text="${note.message}">Message</td>
             <td th:text="${#dates.format(note.date, 'EEE, d MMM yyyy HH:mm')}" style="text-align: center">Date</td>
@@ -26,10 +27,38 @@
                 <i th:if="${note.done} == true" class="fa fa-plus-square-o" style="font-size:20px;color:#337ab7"></i>
                 <i th:if="${note.done} == false" class="fa fa-minus-square-o" style="font-size:20px;color:#337ab7"></i>
             </td>
-            <td style="text-align: center"><a th:href="@{'/edit/{id}'(id=${note.id})}"><i class="fa fa-edit" style="font-size:20px"></i></a></td>
-            <td style="text-align: center"><a th:href="@{'/delete/{id}'(id=${note.id})}"><i class="fa fa-trash" style="font-size:20px"></i></a></td>
+            <td style="text-align: center"><a th:href="@{'/edit/{id}'(id=${note.id})}"><i class="fa fa-edit"
+                                                                                          style="font-size:20px"></i></a>
+            </td>
+            <td style="text-align: center"><a th:href="@{'/delete/{id}'(id=${note.id})}"><i class="fa fa-trash"
+                                                                                            style="font-size:20px"></i></a>
+            </td>
         </tr>
         </tbody>
     </table>
+    <div class="container">
+        <ul class="pagination">
+            <li class="previous" th:if="${page.hasPrevious()}">
+                <a th:href="@{/page(page=${page.number - 1},size=${page.size})}">«</a>
+            </li>
+            <li class="disabled" th:unless="${page.hasPrevious()}">
+                <a href="#">«</a>
+            </li>
+            <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                <li th:if="${page.number == i}" class="active">
+                    <a th:href="@{/page(page=${i},size=${page.size})}">[[${i} + 1]]</a>
+                </li>
+                <li th:unless="${page.number == i}">
+                    <a th:href="@{/page(page=${i},size=${page.size})}">[[${i} + 1]]</a>
+                </li>
+            </th:block>
+            <li class="next" th:if="${page.hasNext()}">
+                <a th:href="@{/page(page=${page.number + 1},size=${page.size})}">»</a>
+            </li>
+            <li class="disabled" th:unless="${page.hasNext()}">
+                <a href="#">»</a>
+            </li>
+        </ul>
+    </div>
 </div>
 </html>
