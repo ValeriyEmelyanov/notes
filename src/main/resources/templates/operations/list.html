@@ -9,8 +9,8 @@
             <th style="width: 5%">#</th>
             <th style="width: 60%">Message</th>
             <th class="dropdown" style="width: 20%">Date
-                <a th:href="@{'/sort/{sortDate}' (sortDate = 'ASC')}"><i class="fa fa-chevron-circle-up"></i></a>
-                <a th:href="@{'/sort/{sortDate}' (sortDate = 'DESC')}"><i class="fa fa-chevron-circle-down"></i></a>
+                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'ASC')}"><i class="fa fa-chevron-circle-up"></i></a>
+                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'DESC')}"><i class="fa fa-chevron-circle-down"></i></a>
             </th>
             <th style="width: 5%">Done</th>
             <th style="width: 5%">Edit</th>
@@ -39,21 +39,21 @@
     <div class="container">
         <ul class="pagination">
             <li class="previous" th:if="${page.hasPrevious()}">
-                <a th:href="@{/page(page=${page.number - 1},size=${page.size})}">«</a>
+                <a th:href="@{/list(page=${page.number - 1},size=${page.size},sortDateOrder=${sortDateOrder})}">«</a>
             </li>
             <li class="disabled" th:unless="${page.hasPrevious()}">
                 <a href="#">«</a>
             </li>
             <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
                 <li th:if="${page.number == i}" class="active">
-                    <a th:href="@{/page(page=${i},size=${page.size})}">[[${i} + 1]]</a>
+                    <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder})}">[[${i} + 1]]</a>
                 </li>
                 <li th:unless="${page.number == i}">
-                    <a th:href="@{/page(page=${i},size=${page.size})}">[[${i} + 1]]</a>
+                    <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder})}">[[${i} + 1]]</a>
                 </li>
             </th:block>
             <li class="next" th:if="${page.hasNext()}">
-                <a th:href="@{/page(page=${page.number + 1},size=${page.size})}">»</a>
+                <a th:href="@{/list(page=${page.number + 1},size=${page.size},sortDateOrder=${sortDateOrder})}">»</a>
             </li>
             <li class="disabled" th:unless="${page.hasNext()}">
                 <a href="#">»</a>

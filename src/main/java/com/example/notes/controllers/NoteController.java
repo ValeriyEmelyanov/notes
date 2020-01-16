@@ -4,7 +4,9 @@ import com.example.notes.persist.entities.Note;
 import com.example.notes.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class NoteController {
 
     private final static int PAGE_SIZE = 10;
+    private final static String SORT_FIELD = "date";
+    private final static String SORT_ORDER_ASC = "ASC";
+    private final static String SORT_ORDER_DESC = "DESC";
 
     private NoteService noteService;
-    private String sortDateMethod = "ASC";
+//    private String sortDateMethod = "ASC";
 
     @Autowired
     public void setNoteService(NoteService noteService) {
@@ -27,30 +32,39 @@ public class NoteController {
     }
 
     @GetMapping("/")
-    public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable, Model model) {
-        Page<Note> page = getList(pageable);
+    public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
+                       @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
+                       Model model) {
+
+        if (sortDateOrder != null && sortDateOrder.toUpperCase().equals(SORT_ORDER_DESC)) {
+            sortDateOrder = SORT_ORDER_DESC;
+        } else {
+            sortDateOrder = SORT_ORDER_ASC;
+        }
+        Sort sort = new Sort(
+                sortDateOrder.equals(SORT_ORDER_DESC) ? Sort.Direction.DESC : Sort.Direction.ASC,
+                SORT_FIELD);
+
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        Page<Note> page = noteService.findAll(pageRequest);
+
         model.addAttribute("page", page);
-        model.addAttribute("sortDate", sortDateMethod);
+        model.addAttribute("sortDateOrder", sortDateOrder);
         return "index";
     }
 
-    private Page<Note> getList(Pageable pageable) {
-        if (sortDateMethod != null && sortDateMethod.toUpperCase().equals("DESC")) {
-            return noteService.findAllByOrOrderByDateDesc(pageable);
-        } else {
-            return noteService.findAllByOrOrderByDateAsc(pageable);
-        }
+    @GetMapping("/sort/{sortDateOrder}")
+    public String sortChoose(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
+                             @PathVariable String sortDateOrder,
+                             Model model) {
+        return list(pageable, sortDateOrder, model);
     }
 
-    @GetMapping("/sort/{sortDate}")
-    public String sortChoose(@PathVariable String sortDate, @PageableDefault(size = PAGE_SIZE) Pageable pageable, Model model) {
-        sortDateMethod = sortDate;
-        return list(pageable, model);
-    }
-
-    @GetMapping("/page")
-    public String page(@PageableDefault(size = PAGE_SIZE) Pageable pageable, Model model) {
-        return list(pageable, model);
+    @GetMapping("/list")
+    public String page(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
+                       @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
+                       Model model) {
+        return list(pageable, sortDateOrder, model);
     }
 
     @GetMapping("/new")

@@ -12,8 +12,5 @@ public interface NoteService {
     void update(Integer id, String message, boolean done);
     void delete(Integer id);
 
-    Page<Note> findAllByOrOrderByDateAsc(Pageable pageable);
-    Page<Note> findAllByOrOrderByDateDesc(Pageable pageable);
-
     Page<Note> findAll(Pageable pageable);
 }

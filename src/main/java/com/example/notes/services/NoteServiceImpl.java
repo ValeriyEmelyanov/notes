@@ -42,16 +42,6 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Page<Note> findAllByOrOrderByDateAsc(Pageable pageable) {
-        return repository.findAllByOrderByDateAsc(pageable);
-    }
-
-    @Override
-    public Page<Note> findAllByOrOrderByDateDesc(Pageable pageable) {
-        return repository.findAllByOrderByDateDesc(pageable);
-    }
-
-    @Override
     public Page<Note> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
