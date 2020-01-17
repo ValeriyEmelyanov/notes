@@ -45,10 +45,7 @@
                 <a href="#">«</a>
             </li>
             <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
-                <li th:if="${page.number == i}" class="active">
-                    <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder})}">[[${i} + 1]]</a>
-                </li>
-                <li th:unless="${page.number == i}">
+                <li th:classappend="${page.number == i}?'active':''">
                     <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder})}">[[${i} + 1]]</a>
                 </li>
             </th:block>

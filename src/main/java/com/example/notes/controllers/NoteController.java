@@ -24,7 +24,6 @@ public class NoteController {
     private final static String SORT_ORDER_DESC = "DESC";
 
     private NoteService noteService;
-//    private String sortDateMethod = "ASC";
 
     @Autowired
     public void setNoteService(NoteService noteService) {
