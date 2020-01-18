@@ -13,4 +13,5 @@ public interface NoteService {
     void delete(Integer id);
 
     Page<Note> findAll(Pageable pageable);
+    Page<Note> findBySearchParameters(String searchText, Pageable pageable);
 }

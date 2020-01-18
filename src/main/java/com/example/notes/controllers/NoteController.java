@@ -33,6 +33,7 @@ public class NoteController {
     @GetMapping("/")
     public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
+                       @RequestParam(required = false, defaultValue = "") String searchText,
                        Model model) {
 
         if (sortDateOrder != null && sortDateOrder.toUpperCase().equals(SORT_ORDER_DESC)) {
@@ -45,25 +46,33 @@ public class NoteController {
                 SORT_FIELD);
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        Page<Note> page = noteService.findAll(pageRequest);
+        Page<Note> page = null;
+        if (searchText != null && !searchText.isEmpty()) {
+            page = noteService.findBySearchParameters(searchText, pageRequest);
+        } else {
+            page = noteService.findAll(pageRequest);
+        }
 
         model.addAttribute("page", page);
         model.addAttribute("sortDateOrder", sortDateOrder);
+        model.addAttribute("searchText", searchText);
         return "index";
     }
 
     @GetMapping("/sort/{sortDateOrder}")
     public String sortChoose(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                              @PathVariable String sortDateOrder,
+                             @RequestParam(required = false, defaultValue = "") String searchText,
                              Model model) {
-        return list(pageable, sortDateOrder, model);
+        return list(pageable, sortDateOrder, searchText, model);
     }
 
     @GetMapping("/list")
     public String page(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
+                       @RequestParam(required = false, defaultValue = "") String searchText,
                        Model model) {
-        return list(pageable, sortDateOrder, model);
+        return list(pageable, sortDateOrder, searchText, model);
     }
 
     @GetMapping("/new")

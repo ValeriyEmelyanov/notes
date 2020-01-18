@@ -45,4 +45,9 @@ public class NoteServiceImpl implements NoteService {
     public Page<Note> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+    @Override
+    public Page<Note> findBySearchParameters(String searchText, Pageable pageable) {
+        return repository.findBySearchParameters(searchText, pageable);
+    }
 }
