@@ -1,5 +1,6 @@
 package com.example.notes.services;
 
+import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,5 +14,5 @@ public interface NoteService {
     void delete(Integer id);
 
     Page<Note> findAll(Pageable pageable);
-    Page<Note> findBySearchParameters(String searchText, Pageable pageable);
+    Page<Note> findBySearchParameters(Pageable pageable, FilterAdjuster filterAdjuster);
 }

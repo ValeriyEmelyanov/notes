@@ -1,5 +1,7 @@
 package com.example.notes.controllers;
 
+import com.example.notes.filtering.DoneFilterOption;
+import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class NoteController {
     @GetMapping("/")
     public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
-                       @RequestParam(required = false, defaultValue = "") String searchText,
+                       FilterAdjuster filterAdjuster,
                        Model model) {
 
         if (sortDateOrder != null && sortDateOrder.toUpperCase().equals(SORT_ORDER_DESC)) {
@@ -47,32 +49,34 @@ public class NoteController {
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         Page<Note> page = null;
-        if (searchText != null && !searchText.isEmpty()) {
-            page = noteService.findBySearchParameters(searchText, pageRequest);
-        } else {
+
+        if (filterAdjuster.isAll()) {
             page = noteService.findAll(pageRequest);
+        } else {
+            page = noteService.findBySearchParameters(pageRequest, filterAdjuster);
         }
 
         model.addAttribute("page", page);
         model.addAttribute("sortDateOrder", sortDateOrder);
-        model.addAttribute("searchText", searchText);
+        model.addAttribute("filterAdjuster", filterAdjuster);
+        model.addAttribute("filterOptions", DoneFilterOption.values());
         return "index";
     }
 
     @GetMapping("/sort/{sortDateOrder}")
     public String sortChoose(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                              @PathVariable String sortDateOrder,
-                             @RequestParam(required = false, defaultValue = "") String searchText,
+                             FilterAdjuster filterAdjuster,
                              Model model) {
-        return list(pageable, sortDateOrder, searchText, model);
+        return list(pageable, sortDateOrder, filterAdjuster, model);
     }
 
     @GetMapping("/list")
     public String page(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
-                       @RequestParam(required = false, defaultValue = "") String searchText,
+                       FilterAdjuster filterAdjuster,
                        Model model) {
-        return list(pageable, sortDateOrder, searchText, model);
+        return list(pageable, sortDateOrder, filterAdjuster, model);
     }
 
     @GetMapping("/new")

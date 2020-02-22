@@ -3,8 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="notes">
-    <form class="form-inline" th:action="@{/(searchText=${searchText})}">
-        <input th:value="${searchText}" th:name="searchText" id="searchText" class="form-control mr-sm-2" type="text" placeholder="Search">
+    <form class="form-inline" th:object="${filterAdjuster}" th:action="@{/(searchText=*{searchText},done=*{done})}">
+        <div th:each="option : ${filterOptions}" class="radio-inline">
+            <input type="radio" th:value="${option}" th:field="*{done}" th:id="${option.ordinal()}">
+            <label th:for="${option.ordinal()}" th:text="${option.description}">All
+            </label>
+        </div>
+        <input th:value="*{searchText}" th:field="*{searchText}" id="searchText" class="form-control mr-sm-2" type="text" placeholder="Search">
         <button class="btn btn-outline-primary" type="submit">Search</button>
     </form>
     <table class="table table-bordered table-hover horizontal-align">
@@ -13,8 +18,8 @@
             <th style="width: 5%">#</th>
             <th style="width: 60%">Message</th>
             <th class="dropdown" style="width: 20%">Date
-                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'ASC',searchText=${searchText})}"><i class="fa fa-chevron-circle-up"></i></a>
-                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'DESC',searchText=${searchText})}"><i class="fa fa-chevron-circle-down"></i></a>
+                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'ASC',searchText=${filterAdjuster.searchText},done=${filterAdjuster.done})}"><i class="fa fa-chevron-circle-up"></i></a>
+                <a th:href="@{'/sort/{sortDateOrder}' (sortDateOrder = 'DESC',searchText=${filterAdjuster.searchText},done=${filterAdjuster.done})}"><i class="fa fa-chevron-circle-down"></i></a>
             </th>
             <th style="width: 5%">Done</th>
             <th style="width: 5%">Edit</th>
@@ -42,18 +47,18 @@
     </table>
     <ul class="pagination">
         <li class="previous" th:if="${page.hasPrevious()}">
-            <a th:href="@{/list(page=${page.number - 1},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${searchText})}">«</a>
+            <a th:href="@{/list(page=${page.number - 1},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${filterAdjuster.searchText},done=${filterAdjuster.done})}">«</a>
         </li>
         <li class="disabled" th:unless="${page.hasPrevious()}">
             <a href="#">«</a>
         </li>
         <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
             <li th:classappend="${page.number == i}?'active':''">
-                <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${searchText})}">[[${i} + 1]]</a>
+                <a th:href="@{/list(page=${i},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${filterAdjuster.searchText},done=${filterAdjuster.done})}">[[${i} + 1]]</a>
             </li>
         </th:block>
         <li class="next" th:if="${page.hasNext()}">
-            <a th:href="@{/list(page=${page.number + 1},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${searchText})}">»</a>
+            <a th:href="@{/list(page=${page.number + 1},size=${page.size},sortDateOrder=${sortDateOrder},searchText=${filterAdjuster.searchText},done=${filterAdjuster.done})}">»</a>
         </li>
         <li class="disabled" th:unless="${page.hasNext()}">
             <a href="#">»</a>

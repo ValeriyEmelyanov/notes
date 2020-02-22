@@ -1,5 +1,7 @@
 package com.example.notes.services;
 
+import com.example.notes.filtering.DoneFilterOption;
+import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,20 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Page<Note> findBySearchParameters(String searchText, Pageable pageable) {
-        return repository.findBySearchParameters(searchText, pageable);
+    public Page<Note> findBySearchParameters(Pageable pageable, FilterAdjuster filterAdjuster) {
+
+        if (filterAdjuster.isAll()) {
+            return findAll(pageable);
+        }
+        if (filterAdjuster.getDone() == DoneFilterOption.ALL && !filterAdjuster.getSearchText().isEmpty()) {
+            return repository.findBySearchText(pageable,
+                    filterAdjuster.getSearchText());
+        }
+        if (filterAdjuster.getDone() != DoneFilterOption.ALL && filterAdjuster.getSearchText().isEmpty()) {
+            return repository.findByDone(pageable,
+                    filterAdjuster.getDone() == DoneFilterOption.DONE);
+        }
+        return repository.findByDoneAndSearchText(pageable,
+                filterAdjuster.getDone() == DoneFilterOption.DONE, filterAdjuster.getSearchText());
     }
 }
