@@ -10,8 +10,18 @@ import org.springframework.data.repository.query.Param;
 public interface NoteRepository extends JpaRepository<Note, Integer> {
 
     @Query("select n from Note n where lower(n.message) like lower(concat('%', :searchText, '%'))")
-    Page<Note> findBySearchParameters(
-            @Param("searchText") String searchText,
-            Pageable pageable);
+    Page<Note> findBySearchText(
+            Pageable pageable,
+            @Param("searchText") String searchText);
+
+    Page<Note> findByDone(
+            Pageable pageable,
+            @Param("done") boolean done);
+
+    @Query("select n from Note n where n.done=:done and lower(n.message) like lower(concat('%', :searchText, '%'))")
+    Page<Note> findByDoneAndSearchText(
+            Pageable pageable,
+            @Param("done") boolean done,
+            @Param("searchText") String searchText);
 
 }
