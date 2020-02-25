@@ -15,3 +15,8 @@ INSERT INTO notes (message, date, done) VALUES ('Note 12', '2020-01-10 12:30:00'
 INSERT INTO notes (message, date, done) VALUES ('Note 13', '2020-01-11 12:30:00', 0);
 INSERT INTO notes (message, date, done) VALUES ('Note 14', '2020-01-12 12:30:00', 0);
 INSERT INTO notes (message, date, done) VALUES ('Note 15', '2020-01-13 12:30:00', 0);
+
+TRUNCATE TABLE users;
+
+INSERT INTO users (username, encrypted_password, role, active)
+values ('admin', '$2a$04$FK/bOGOv6wlm6VH6mSYJDuSzf9EAasHljhObh0c3sqLlnLcRpor4i', 'ADMIN', 1);

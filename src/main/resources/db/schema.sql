@@ -10,5 +10,20 @@ CREATE TABLE notes (
     PRIMARY KEY (id)
 )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET  = 'utf8'
+DEFAULT CHARACTER SET = 'utf8'
+COLLATE = 'utf8_general_ci';
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id INT(8) NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    encrypted_password VARCHAR(255) NOT NULL,
+    role VARCHAR(10),
+    active BIT(1) NOT NULL DEFAULT b'0',
+    PRIMARY KEY (id),
+    UNIQUE (username)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = 'utf8'
 COLLATE = 'utf8_general_ci';

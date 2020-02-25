@@ -16,6 +16,7 @@
 * У меня MsSql 5.7. При подключении базы к EDEA была ошибка 08001. В настройках подключения необходимо в Driver выбрать "MySQL for 5.1".
 * Вывод перечисления в виде списка радиокнопок:
 <br> <i>пробный вариант, добавляю в модель атрибут done</i>
+
 ---
         <label class="radio-inline">
             <input th:value="${'all'}" type="radio" name="done" th:checked="${done=='all'}">All
@@ -27,6 +28,7 @@
             <input th:value="${'done'}" type="radio" name="done" th:checked="${done=='done'}">Done
         </label>
 ---
+
 <i>оптимизированный вариант, добавляю в модель атрибуты filterOptions (массив констант перечисления) и done</i>
 
 ---
@@ -36,6 +38,7 @@
             </label>
         </div>
 ---
+
 <i>и еще вариант, добавляю в модель атрибуты filterOptions (массив констант перечисления), done является полем объекта filterAdjuster</i>
 
 ---
@@ -50,6 +53,14 @@
     </form>
 ---
 
+* Ресурс интерпретируется как таблица стилей. 
+После успешной аутентификации открывается содержимое страницы /static/css/bootstrap.min.css.
+Нашел ответ <a href="https://coder-booster.ru/q/resource-interpreted-as-stylesheet-but-transferred-with-mime-type-text-html-see-18236/">здесь</a> - ответ @Rob Sedgwic.
+Проблема происходит, когда запрос, в том числе и для статического контента проходит проверку подлинности.
+Решение: добавил исключение в мою конфигурацию безопасности `.antMatchers("/css/**").permitAll()`.
+ 
+### Пошаговая инструкция добавления Security
+[перейти](STEP-BY-STEP-SECURITY-ADDING.md)
 
 ### Полезные ссылки
 
