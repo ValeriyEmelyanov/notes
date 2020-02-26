@@ -1,18 +1,17 @@
 package com.example.notes.transfer;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserDto {
 
+    @NotEmpty
     private String username;
+
+    @NotEmpty
     private String password;
+
+    @NotEmpty
     private String matchingPassword;
-
-    public UserDto() {
-    }
-
-//    public UserDto(String username, String password) {
-//        this.username = username;
-//        this.password = password;
-//    }
 
     public String getUsername() {
         return username;
