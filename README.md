@@ -3,7 +3,7 @@
 Приложение для ведения заметок - списка дел, с отметкой сделано или нет.
 
 ### Используемые технологии
-* Spring Boot, Spring MVC, Spring Data JPA
+* Spring Boot, Spring MVC, Spring Data JPA, Spring Security
 * MySql
 * Thymeleaf
 * Bootstrap
