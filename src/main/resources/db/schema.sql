@@ -1,5 +1,7 @@
 USE notesdb;
 
+# notes
+
 DROP TABLE IF EXISTS notes;
 
 CREATE TABLE notes (
@@ -12,6 +14,8 @@ CREATE TABLE notes (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = 'utf8'
 COLLATE = 'utf8_general_ci';
+
+# users
 
 DROP TABLE IF EXISTS users;
 
@@ -27,3 +31,13 @@ CREATE TABLE users (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = 'utf8'
 COLLATE = 'utf8_general_ci';
+
+# for "Remember me"
+
+CREATE TABLE IF NOT EXISTS persistent_logins(
+    username  VARCHAR(64) NOT NULL,
+    series    VARCHAR(64) NOT NULL,
+    token     VARCHAR(64) NOT NULL,
+    last_used TIMESTAMP   NOT NULL,
+    PRIMARY KEY (series)
+);
