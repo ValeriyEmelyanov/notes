@@ -3,13 +3,20 @@ package com.example.notes.services;
 import com.example.notes.filtering.DoneFilterOption;
 import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
+import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
+/**
+ * Реализация сервиса заметок
+ */
 @Service
+@Transactional
 public class NoteServiceImpl implements NoteService {
 
     private NoteRepository repository;
@@ -31,10 +38,11 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void update(Integer id, String message, boolean done) {
+    public void update(Integer id, String message, boolean done, User user) {
         Note note = repository.getOne(id);
         note.setMessage(message);
         note.setDone(done);
+        note.setUser(user);
         repository.save(note);
     }
 
@@ -44,25 +52,26 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Page<Note> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<Note> findByUserId(Pageable pageable, Integer userId) {
+        return repository.findByUserId(pageable, userId);
     }
 
     @Override
-    public Page<Note> findBySearchParameters(Pageable pageable, FilterAdjuster filterAdjuster) {
+    public Page<Note> findByUserIdAndSearchParameters(Pageable pageable,
+                                                      Integer userId, FilterAdjuster filterAdjuster) {
 
         if (filterAdjuster.isAll()) {
-            return findAll(pageable);
+            return findByUserId(pageable, userId);
         }
         if (filterAdjuster.getDone() == DoneFilterOption.ALL && !filterAdjuster.getSearchText().isEmpty()) {
-            return repository.findBySearchText(pageable,
-                    filterAdjuster.getSearchText());
+            return repository.findByUserIdAndSearchText(pageable,
+                    userId, filterAdjuster.getSearchText());
         }
         if (filterAdjuster.getDone() != DoneFilterOption.ALL && filterAdjuster.getSearchText().isEmpty()) {
-            return repository.findByDone(pageable,
-                    filterAdjuster.getDone() == DoneFilterOption.DONE);
+            return repository.findByUserIdAndDone(pageable,
+                    userId, filterAdjuster.getDone() == DoneFilterOption.DONE);
         }
-        return repository.findByDoneAndSearchText(pageable,
-                filterAdjuster.getDone() == DoneFilterOption.DONE, filterAdjuster.getSearchText());
+        return repository.findByUserIdAndDoneAndSearchText(pageable,
+                userId, filterAdjuster.getDone() == DoneFilterOption.DONE, filterAdjuster.getSearchText());
     }
 }

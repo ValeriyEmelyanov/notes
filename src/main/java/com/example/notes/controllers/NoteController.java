@@ -3,7 +3,9 @@ package com.example.notes.controllers;
 import com.example.notes.filtering.DoneFilterOption;
 import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
+import com.example.notes.persist.entities.User;
 import com.example.notes.services.NoteService;
+import com.example.notes.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Контроллер заметок - текущих дел
+ */
 @Controller
 public class NoteController {
 
@@ -26,10 +31,16 @@ public class NoteController {
     private final static String SORT_ORDER_DESC = "DESC";
 
     private NoteService noteService;
+    private UserService userService;
 
     @Autowired
     public void setNoteService(NoteService noteService) {
         this.noteService = noteService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -50,10 +61,12 @@ public class NoteController {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         Page<Note> page = null;
 
+        Integer userId = userService.getCurrentUserId().orElseThrow(IllegalArgumentException::new);
+
         if (filterAdjuster.isAll()) {
-            page = noteService.findAll(pageRequest);
+            page = noteService.findByUserId(pageRequest, userId);
         } else {
-            page = noteService.findBySearchParameters(pageRequest, filterAdjuster);
+            page = noteService.findByUserIdAndSearchParameters(pageRequest, userId, filterAdjuster);
         }
 
         model.addAttribute("page", page);
@@ -86,7 +99,8 @@ public class NoteController {
 
     @PostMapping("/save")
     public String save(@RequestParam String message) {
-        noteService.save(new Note(message));
+        User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
+        noteService.save(new Note(message, user));
         return "redirect:/";
     }
 
@@ -100,7 +114,8 @@ public class NoteController {
     @PostMapping("/update")
     public String update(@RequestParam Integer id, @RequestParam String message,
                          @RequestParam(value = "done", required = false) boolean done) {
-        noteService.update(id, message, done);
+        User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
+        noteService.update(id, message, done, user);
         return "redirect:/";
     }
 

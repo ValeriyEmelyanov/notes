@@ -20,13 +20,18 @@ public class Note {
     @Column(name = "done")
     private boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Note() {
     }
 
-    public Note(String message) {
+    public Note(String message, User user) {
         this.message = message;
         this.date = new Date();
         this.done = false;
+        this.user = user;
     }
 
     public int getId() {
@@ -59,5 +64,13 @@ public class Note {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
