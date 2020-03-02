@@ -1,6 +1,6 @@
 package com.example.notes.services;
 
-import com.example.notes.transfer.UserDto;
+import com.example.notes.transfer.UserRegDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,12 @@ public class SignupServiceImpl implements SignupService {
 
     /**
      * Регистрация полльзователя: шифруется пароль, в базе данных сохраняется новый пользователь.
-     * @param userDto   Данные регистрируемого пользователя
+     * @param userRegDto   Данные регистрируемого пользователя
      */
     @Override
-    public void signup(UserDto userDto) {
-        userService.create(userDto);
-        logger.info("New user is saved: {}", userDto.getUsername());
+    public void signup(UserRegDto userRegDto) {
+        userService.create(userRegDto);
+        logger.info("New user is saved: {}", userRegDto.getUsername());
     }
 
     /**

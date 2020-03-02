@@ -1,7 +1,7 @@
 package com.example.notes.services;
 
 import com.example.notes.persist.entities.User;
-import com.example.notes.transfer.UserDto;
+import com.example.notes.transfer.UserRegDto;
 
 import java.util.Optional;
 
@@ -17,5 +17,5 @@ public interface UserService {
     // CRUD-операции для управления списком пользователей
     // * Удаление фиизическое отсутствует - у пользователя снимается флажок активности
     Optional<User> findByUsername(String username);
-    void create(UserDto userDto);
+    void create(UserRegDto userRegDto);
 }

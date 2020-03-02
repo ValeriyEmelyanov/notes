@@ -3,7 +3,7 @@ package com.example.notes.services;
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.UserRepository;
-import com.example.notes.transfer.UserDto;
+import com.example.notes.transfer.UserRegDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -67,10 +67,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(UserDto userDto) {
-        String encryptedPassword = passwordEncoder.encode(userDto.getPassword());
+    public void create(UserRegDto userRegDto) {
+        String encryptedPassword = passwordEncoder.encode(userRegDto.getPassword());
         User newUser = User.builder()
-                .username(userDto.getUsername())
+                .username(userRegDto.getUsername())
                 .encryptedPassword(encryptedPassword)
                 .role(Role.USER)
                 .active(true)

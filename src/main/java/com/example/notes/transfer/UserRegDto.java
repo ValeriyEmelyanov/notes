@@ -2,7 +2,7 @@ package com.example.notes.transfer;
 
 import javax.validation.constraints.NotEmpty;
 
-public class UserDto {
+public class UserRegDto {
 
     @NotEmpty
     private String username;

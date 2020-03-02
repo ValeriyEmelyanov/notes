@@ -27,7 +27,7 @@
 унаследовать от `WebSecurityConfigurerAdapter`.
 Переопределить методы `void configure(HttpSecurity http)` и `void configure(AuthenticationManagerBuilder auth)`.
 
-8. Создать пакет `transfer` и в нем создать класс `UserDto` для передачи данных пользователя. 
+8. Создать пакет `transfer` и в нем создать класс `UserRegDto` для передачи данных пользователя. 
 
 9. Добавить контроллер `SignupController` в пакет `controllers` 
 и страницу `signup.html` в папку `templates`.

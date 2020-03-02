@@ -1,7 +1,7 @@
 package com.example.notes.controllers;
 
 import com.example.notes.services.SignupService;
-import com.example.notes.transfer.UserDto;
+import com.example.notes.transfer.UserRegDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,29 +31,29 @@ public class SignupController {
 
     @GetMapping("/signup")
     public String signup(Model model) {
-        model.addAttribute("user", new UserDto());
+        model.addAttribute("user", new UserRegDto());
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute("user") @Valid UserDto userDto, BindingResult result) {
-        logger.info("Request to register a new user: {}", userDto.getUsername());
+    public String signup(@ModelAttribute("user") @Valid UserRegDto userRegDto, BindingResult result) {
+        logger.info("Request to register a new user: {}", userRegDto.getUsername());
 
         if (result.hasErrors()) {
             return "signup";
         }
 
-        if (!signupService.isFreeUsername(userDto.getUsername())) {
-            result.rejectValue("username", "", String.format("User %s already exists!", userDto.getUsername()));
+        if (!signupService.isFreeUsername(userRegDto.getUsername())) {
+            result.rejectValue("username", "", String.format("User %s already exists!", userRegDto.getUsername()));
             return "signup";
         }
 
-        if (!userDto.getPassword().equals(userDto.getMatchingPassword())) {
+        if (!userRegDto.getPassword().equals(userRegDto.getMatchingPassword())) {
             result.rejectValue("password", "", "Password not matching");
             return "signup";
         }
 
-        signupService.signup(userDto);
+        signupService.signup(userRegDto);
 
         return "redirect:/login";
     }
