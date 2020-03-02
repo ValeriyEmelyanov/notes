@@ -3,6 +3,9 @@ package com.example.notes.persist.entities;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Сущность заметки (запись о деле, которое необхоимо сделать)
+ */
 @Entity
 @Table(name = "notes")
 public class Note {

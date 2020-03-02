@@ -1,7 +1,10 @@
 package com.example.notes.services;
 
 import com.example.notes.persist.entities.User;
+import com.example.notes.transfer.UserDto;
 import com.example.notes.transfer.UserRegDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ public interface UserService {
 
     // CRUD-операции для управления списком пользователей
     // * Удаление фиизическое отсутствует - у пользователя снимается флажок активности
-    Optional<User> findByUsername(String username);
+    Optional<UserDto> findByUsername(String username);
     void create(UserRegDto userRegDto);
+    Page<UserDto> findAll(Pageable pageable);
+    void update(UserDto userDto);
 }

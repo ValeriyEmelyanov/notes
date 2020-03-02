@@ -2,6 +2,10 @@ package com.example.notes.transfer;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Класс для передачи данных пользователя при регистрации или аутентификации
+ * от слоя представления в слой сервиса
+ */
 public class UserRegDto {
 
     @NotEmpty
