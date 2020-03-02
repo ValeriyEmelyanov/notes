@@ -1,11 +1,14 @@
 package com.example.notes.services;
 
+import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.UserRepository;
+import com.example.notes.transfer.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,10 +22,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,5 +59,22 @@ public class UserServiceImpl implements UserService {
             return userRepository.findOneByUsername(optionalUsername.get());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findOneByUsername(username);
+    }
+
+    @Override
+    public void create(UserDto userDto) {
+        String encryptedPassword = passwordEncoder.encode(userDto.getPassword());
+        User newUser = User.builder()
+                .username(userDto.getUsername())
+                .encryptedPassword(encryptedPassword)
+                .role(Role.USER)
+                .active(true)
+                .build();
+        userRepository.save(newUser);
     }
 }
