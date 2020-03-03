@@ -10,6 +10,15 @@
 * Maven
 * Tomcat
 
+### Шаги реализации
+1. Взял за основу <a href="https://javarush.ru/groups/posts/497-zavoevanie-spring-boot">Завоевание Spring Boot</a>. 
+Вот результат - <a href="https://github.com/ValeriyEmelyanov/notes/tree/v1_simple">вариант простой реализации</a>.  
+2. Добавил пользователей и Security - [Пошаговая инструкция добавления Security](STEP-BY-STEP-SECURITY-ADDING.md) 
+3. Заметки привязал к пользователям.
+4. Реализовал работу со списком пользователей.
+
+Собрать проект и запустить из командной строки:<br> 
+`mvn spring-boot:run`
 
 ### Проблемы и их решения
 
@@ -58,13 +67,9 @@
 Нашел ответ <a href="https://coder-booster.ru/q/resource-interpreted-as-stylesheet-but-transferred-with-mime-type-text-html-see-18236/">здесь</a> - ответ @Rob Sedgwic.
 Проблема происходит, когда запрос, в том числе и для статического контента проходит проверку подлинности.
 Решение: добавил исключение в мою конфигурацию безопасности `.antMatchers("/css/**").permitAll()`.
+* В UserService было необходимо преобразовать Page\<User\> в Page\<UserDto\>. Помогло это: <a href="https://stackoverflow.com/questions/37749559/conversion-of-list-to-page-in-spring">Conversion of List to Page in Spring</b></a>
  
-### Пошаговая инструкция добавления Security
-[перейти](STEP-BY-STEP-SECURITY-ADDING.md)
-
 ### Полезные ссылки
-
-Взято за основу <a href="https://javarush.ru/groups/posts/497-zavoevanie-spring-boot">Завоевание Spring Boot</a>
 
 MySql
 * <a href="http://stasyak.ru/?p=51">Пользователи и их права в MySQL на примерах</a>
@@ -77,3 +82,7 @@ CRUD
  Thymeleaf
  * <a href="http://itutorial.thymeleaf.org/exercise/12">Thymeleaf Interactive Tutorial <i>Exercise 12: forms</i></b></a>
  
+ Прочее
+ * <a href="https://fontawesome.ru/all-icons/">Полная сборка из 675 иконок Font Awesome 4.7.0</b></a>
+ 
+  
