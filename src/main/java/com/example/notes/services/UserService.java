@@ -20,6 +20,7 @@ public interface UserService {
     // CRUD-операции для управления списком пользователей
     // * Удаление фиизическое отсутствует - у пользователя снимается флажок активности
     Optional<UserDto> findByUsername(String username);
+    UserDto getById(Integer id);
     void create(UserRegDto userRegDto);
     Page<UserDto> findAll(Pageable pageable);
     void update(UserDto userDto);

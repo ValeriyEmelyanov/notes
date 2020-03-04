@@ -83,6 +83,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getById(Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            throw new IllegalArgumentException("No user with such id!");
+        }
+        User user = optionalUser.get();
+        return UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .active(user.isActive())
+                .build();
+    }
+
+    @Override
     public void create(UserRegDto userRegDto) {
         String encryptedPassword = passwordEncoder.encode(userRegDto.getPassword());
         User newUser = User.builder()
@@ -110,8 +125,15 @@ public class UserServiceImpl implements UserService {
         return new PageImpl<UserDto>(userDtos, pageable, usersPage.getTotalElements());
     }
 
+    /**
+     * Сохраняет изменения у пользователя. Можно поменять роль и активность.
+     * @param userDto измененные данные пользователя
+     */
     @Override
     public void update(UserDto userDto) {
-
+        User user = userRepository.findById(userDto.getId()).orElseThrow(IllegalArgumentException::new);
+        user.setRole(userDto.getRole());
+        user.setActive(userDto.isActive());
+        userRepository.save(user);
     }
 }

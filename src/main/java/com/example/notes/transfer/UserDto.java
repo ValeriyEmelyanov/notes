@@ -3,7 +3,8 @@ package com.example.notes.transfer;
 import com.example.notes.persist.entities.Role;
 
 /**
- * Класс для передачи данных аккаунта пользователя на фронтэнд
+ * Класс для передачи данных пользователя на слой представления.
+ * Так же возврат измененных данных пользователя из слоя представления.
  */
 public class UserDto {
     private int id;
