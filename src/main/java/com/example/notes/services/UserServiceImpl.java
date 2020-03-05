@@ -136,4 +136,13 @@ public class UserServiceImpl implements UserService {
         user.setActive(userDto.isActive());
         userRepository.save(user);
     }
+
+    @Override
+    public void disable(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        if (user.isActive()) {
+            user.setActive(false);
+            userRepository.save(user);
+        }
+    }
 }

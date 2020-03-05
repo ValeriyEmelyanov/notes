@@ -24,4 +24,5 @@ public interface UserService {
     void create(UserRegDto userRegDto);
     Page<UserDto> findAll(Pageable pageable);
     void update(UserDto userDto);
+    void disable(Integer id);
 }
