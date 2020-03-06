@@ -5,7 +5,7 @@
 <body>
 
 <div class="container">
-    <div th:replace="fragments/usersheader :: usersheader"></div>
+    <div th:replace="fragments/header :: header"></div>
     <div th:if="${not #lists.isEmpty(page.content)}">
         <div th:replace="operations/userslist :: users"></div>
     </div>

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
 <div th:fragment="header">
     <nav class="navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <a class="navbar-brand" th:href="@{/}">Notes</a>
-                <ul class="nav navbar-nav">
+                <ul th:if="${!#strings.containsIgnoreCase(#httpServletRequest.requestURI,'users')}" class="nav navbar-nav">
                     <li><a href="#" th:href="@{/new}">New Note</a></li>
                 </ul>
+                <a sec:authorize="hasAuthority('ADMIN')" class="navbar-brand" th:href="@{/users}">Users</a>
                 <form class="navbar-form navbar-right" th:action="@{/logout}" method="post">
                     <button sec:authorize="isAuthenticated()" class="btn btn-outline-success">Logout
                     </button>
