@@ -9,11 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -29,31 +33,43 @@ class NoteServiceImplTest {
     private NoteRepository noteRepository;
 
     private Note noteModel;
+    private User currentUser; // Текущий (залогинившийся) пользователь
+    private User wrongUser;   // Какой-то другой (левый) пользователь
+    private List<Note> notes;
+    private int notesSize;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        User user = new User();
-        user.setId(1);
-        user.setUsername("user");
-        user.setEncryptedPassword("12345");
-        user.setRole(Role.USER);
-        user.setActive(true);
+        currentUser = User.builder()
+                .id(1)
+                .username("user")
+                .encryptedPassword("12345")
+                .role(Role.USER)
+                .active(true)
+                .build();
 
-        noteModel = new Note();
-        noteModel.setId(NOTE_ID);
-        noteModel.setMessage(MSG);
-        noteModel.setDate(DATE_NOW);
-        noteModel.setDone(false);
-        noteModel.setUser(user);
+        wrongUser = User.builder().id(99).build();
+
+        noteModel = Note.builder()
+                .id(NOTE_ID)
+                .message(MSG)
+                .date(DATE_NOW)
+                .done(false)
+                .user(currentUser)
+                .build();
+
+        notes = new ArrayList<>();
+        notes.add(noteModel);
+        notesSize = notes.size();
     }
 
     @Test
     void getById() {
         when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
 
-        Note note = noteService.getById(1);
+        Note note = noteService.getById(1, currentUser);
 
         assertNotNull(note);
         assertEquals(noteModel.getId(), note.getId());
@@ -64,11 +80,78 @@ class NoteServiceImplTest {
     }
 
     @Test
+    void getByIdWithWrongUser() {
+        when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> {
+                    Note note = noteService.getById(1, wrongUser);
+                });
+    }
+
+    @Test
     void save() {
+        Note newNote = new Note("New message", currentUser);
+
+        when(noteRepository.save(newNote))
+                .thenAnswer(
+                        (Answer<Void>) invocation -> {
+                            notes.add(newNote);
+                            return null;
+                        });
+
+        noteService.save(newNote);
+
+        assertEquals(notesSize + 1, notes.size());
     }
 
     @Test
     void update() {
+        String message = "New message";
+        boolean done = true;
+
+        when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
+        when(noteRepository.save(noteModel))
+                .thenAnswer(
+                        (Answer<Void>) invocation -> {
+                            noteModel.setMessage(message);
+                            noteModel.setDone(done);
+                            noteModel.setUser(currentUser);
+                            return null;
+                        });
+
+        noteService.update(NOTE_ID, message, done, currentUser);
+
+        assertEquals(notesSize, notes.size());
+        assertEquals(NOTE_ID, (Integer) noteModel.getId());
+        assertEquals(message, noteModel.getMessage());
+        assertEquals(DATE_NOW, noteModel.getDate());
+        assertEquals(done, noteModel.isDone());
+        assertEquals(currentUser, noteModel.getUser());
+    }
+
+    @Test
+    void updateWithWrongUser() {
+        String message = "New message";
+        boolean done = true;
+        //User user = currentUser;
+        User user = wrongUser;
+
+        when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
+        when(noteRepository.save(noteModel))
+                .thenAnswer(
+                        (Answer<Void>) invocation -> {
+                            noteModel.setMessage(message);
+                            noteModel.setDone(done);
+                            noteModel.setUser(user);
+                            return null;
+                        });
+
+        assertThrows(IllegalArgumentException.class,
+                () -> {
+                    noteService.update(NOTE_ID, message, done, user);
+                });
+
     }
 
     @Test

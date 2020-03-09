@@ -1,6 +1,13 @@
 package com.example.notes.persist.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -75,5 +82,49 @@ public class Note {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public static NoteBuilder builder() {
+        return new NoteBuilder();
+    }
+
+    /**
+     * Билдер для создания новой заметки
+     */
+    public static class NoteBuilder {
+        private Note note;
+
+        public NoteBuilder() {
+            this.note = new Note();
+        }
+
+        public NoteBuilder id(Integer id) {
+            this.note.setId(id);
+            return this;
+        }
+
+        public NoteBuilder message(String message) {
+            this.note.setMessage(message);
+            return this;
+        }
+
+        public NoteBuilder date(Date date) {
+            this.note.setDate(date);
+            return this;
+        }
+
+        public NoteBuilder done(boolean done) {
+            this.note.setDone(done);
+            return this;
+        }
+
+        public NoteBuilder user(User user) {
+            this.note.setUser(user);
+            return this;
+        }
+
+        public Note build() {
+            return this.note;
+        }
     }
 }

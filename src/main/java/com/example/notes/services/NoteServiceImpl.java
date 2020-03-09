@@ -28,8 +28,17 @@ public class NoteServiceImpl implements NoteService {
 
 
     @Override
-    public Note getById(Integer id) {
-        return repository.getOne(id);
+    public Note getById(Integer id, User user) {
+        Note note = repository.getOne(id);
+
+        if (user == null
+                || note == null
+                || note.getUser() == null
+                || !user.getId().equals(note.getUser().getId())) {
+            throw new IllegalArgumentException();
+        }
+
+        return note;
     }
 
     @Override

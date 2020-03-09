@@ -106,7 +106,8 @@ public class NoteController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
-        Note note = noteService.getById(id);
+        User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
+        Note note = noteService.getById(id, user);
         model.addAttribute("note", note);
         return "operations/edit";
     }

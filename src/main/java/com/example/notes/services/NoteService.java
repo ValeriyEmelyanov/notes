@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
  * Интерфейс сервиса заметок
  */
 public interface NoteService {
-    Note getById(Integer id);
+    Note getById(Integer id, User user);
     void save(Note note);
     void update(Integer id, String message, boolean done, User user);
     void delete(Integer id, User user);
