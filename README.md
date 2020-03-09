@@ -67,7 +67,17 @@
 Нашел ответ <a href="https://coder-booster.ru/q/resource-interpreted-as-stylesheet-but-transferred-with-mime-type-text-html-see-18236/">здесь</a> - ответ @Rob Sedgwic.
 Проблема происходит, когда запрос, в том числе и для статического контента проходит проверку подлинности.
 Решение: добавил исключение в мою конфигурацию безопасности `.antMatchers("/css/**").permitAll()`.
-* В UserService было необходимо преобразовать Page\<User\> в Page\<UserDto\>. Помогло это: <a href="https://stackoverflow.com/questions/37749559/conversion-of-list-to-page-in-spring">Conversion of List to Page in Spring</b></a>
+* В UserService было необходимо преобразовать Page\<User\> в Page\<UserDto\>. 
+Помогло это: <a href="https://stackoverflow.com/questions/37749559/conversion-of-list-to-page-in-spring">Conversion of List to Page in Spring</b></a>
+* Чтобы добавить JUnit5 необходимо сначала из `spring-boot-starter-test` исключть JUnit4:
+---
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+---
  
 ### Полезные ссылки
 

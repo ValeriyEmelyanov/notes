@@ -2,6 +2,7 @@ package com.example.notes.persist.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Аккаунт пользователя.
@@ -88,6 +89,23 @@ public class User {
 
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return active == user.active &&
+                id.equals(user.id) &&
+                username.equals(user.username) &&
+                encryptedPassword.equals(user.encryptedPassword) &&
+                role == user.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, encryptedPassword, role, active);
     }
 
     public static UserBuilder builder() {
