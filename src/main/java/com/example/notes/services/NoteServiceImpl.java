@@ -40,6 +40,14 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public void update(Integer id, String message, boolean done, User user) {
         Note note = repository.getOne(id);
+
+        if (user == null
+                || note == null
+                || note.getUser() == null
+                || !user.getId().equals(note.getUser().getId())) {
+            throw new IllegalArgumentException();
+        }
+
         note.setMessage(message);
         note.setDone(done);
         note.setUser(user);
@@ -47,7 +55,16 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id, User user) {
+        Note note = repository.getOne(id);
+
+        if (user == null
+                || note == null
+                || note.getUser() == null
+                || !user.getId().equals(note.getUser().getId())) {
+            throw new IllegalArgumentException();
+        }
+
         repository.deleteById(id);
     }
 

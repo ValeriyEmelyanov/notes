@@ -121,7 +121,8 @@ public class NoteController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
-        noteService.delete(id);
+        User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
+        noteService.delete(id, user);
         return "redirect:/";
     }
 }
