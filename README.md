@@ -100,6 +100,10 @@
 * Как в JUnit проверить ожидаемые исключения? 
 Ответы: <a href="http://barancev.github.io/junit-catch-throwable/">...как в JUnit проверять ожидаемые исключения?</b></a> 
 и <a href="https://stackoverflow.com/questions/40268446/junit-5-how-to-assert-an-exception-is-thrown">JUnit 5: How to assert an exception is thrown?</b></a> 
+* Проблема Mockito в заглушке нельзя применить void метод - решение: 
+<a href="https://stackoverflow.com/questions/25249902/mockito-issue-whenjava-lang-void-in-stubber-cannot-be-applied-to-void">Mockito issue - when(java.lang.Void) in Stubber cannot be applied to void
+</b></a>
+
  
 ### Полезные ссылки
 
