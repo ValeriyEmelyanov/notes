@@ -101,9 +101,10 @@
 Ответы: <a href="http://barancev.github.io/junit-catch-throwable/">...как в JUnit проверять ожидаемые исключения?</b></a> 
 и <a href="https://stackoverflow.com/questions/40268446/junit-5-how-to-assert-an-exception-is-thrown">JUnit 5: How to assert an exception is thrown?</b></a> 
 * Проблема Mockito в заглушке нельзя применить void метод - решение: 
-<a href="https://stackoverflow.com/questions/25249902/mockito-issue-whenjava-lang-void-in-stubber-cannot-be-applied-to-void">Mockito issue - when(java.lang.Void) in Stubber cannot be applied to void
-</b></a>
-
+<a href="https://stackoverflow.com/questions/25249902/mockito-issue-whenjava-lang-void-in-stubber-cannot-be-applied-to-void">Mockito issue - when(java.lang.Void) in Stubber cannot be applied to void</a>
+* Как при тестировании подтасовать аутентификацию?:
+<a href="https://www.javacodegeeks.com/2017/05/mocking-spring-security-context-unit-testing.html">Mocking Spring Security Context for Unit Testing</a>
+ 
  
 ### Полезные ссылки
 
