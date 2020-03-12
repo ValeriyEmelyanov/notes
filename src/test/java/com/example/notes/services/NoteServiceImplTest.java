@@ -151,7 +151,7 @@ class NoteServiceImplTest {
         noteService.update(NOTE_ID, message, done, currentUser);
 
         assertEquals(notesSize, notes.size());
-        assertEquals(NOTE_ID, (Integer) noteModel.getId());
+        assertEquals(NOTE_ID, noteModel.getId());
         assertEquals(message, noteModel.getMessage());
         assertEquals(DATE_NOW, noteModel.getDate());
         assertEquals(done, noteModel.isDone());
@@ -227,7 +227,6 @@ class NoteServiceImplTest {
     @Test
     void findByUserIdAndSearchParameters() {
         int pageSize = 10;
-
         Sort sort = new Sort(Sort.Direction.ASC, SORT_FIELD);
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
 
