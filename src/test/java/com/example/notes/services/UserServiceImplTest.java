@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +26,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -78,6 +81,19 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getCurrentUsernameFail() {
+        Authentication auth = mock(AnonymousAuthenticationToken.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        Optional<String> usernameOptional = userService.getCurrentUsername();
+
+        assertFalse(usernameOptional.isPresent());
+    }
+
+    @Test
     void getCurrentUserId() {
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -94,6 +110,19 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getCurrentUserIdFail() {
+        Authentication auth = mock(AnonymousAuthenticationToken.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        Optional<Integer> idOptional = userService.getCurrentUserId();
+
+        assertFalse(idOptional.isPresent());
+    }
+
+    @Test
     void getCurrentUser() {
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -107,6 +136,19 @@ class UserServiceImplTest {
 
         assertTrue(userOptional.isPresent());
         assertEquals(user, userOptional.get());
+    }
+
+    @Test
+    void getCurrentUserFail() {
+        Authentication auth = mock(AnonymousAuthenticationToken.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        Optional<User> userOptional = userService.getCurrentUser();
+
+        assertFalse(userOptional.isPresent());
     }
 
     @Test
@@ -127,6 +169,15 @@ class UserServiceImplTest {
     }
 
     @Test
+    void findByUsernameFail() {
+        when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.empty());
+
+        Optional<UserDto> userDtoOptional = userService.findByUsername("somename");
+
+        assertFalse(userDtoOptional.isPresent());
+    }
+
+    @Test
     void getById() {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.ofNullable(user));
 
@@ -137,6 +188,13 @@ class UserServiceImplTest {
         assertEquals(user.getUsername(), userDto.getUsername());
         assertEquals(user.getRole(), userDto.getRole());
         assertEquals(user.isActive(), userDto.isActive());
+    }
+
+    @Test
+    void getByIdFail() {
+        when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.getById(99));
     }
 
     @Test
@@ -206,6 +264,6 @@ class UserServiceImplTest {
                 });
         userService.disable(USER_ID);
 
-        assertEquals(false, user.isActive());
+        assertFalse(user.isActive());
     }
 }
