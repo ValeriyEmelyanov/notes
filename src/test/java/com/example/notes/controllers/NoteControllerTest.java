@@ -1,5 +1,6 @@
 package com.example.notes.controllers;
 
+import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.entities.User;
 import com.example.notes.services.NoteServiceImpl;
@@ -93,6 +94,24 @@ class NoteControllerTest {
     }
 
     @Test
+    void listWithFilter() throws Exception {
+        // настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
+        when(noteService.findByUserIdAndSearchParameters(any(Pageable.class), anyInt(), any(FilterAdjuster.class)))
+                .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
+
+        // вызываем тестируемый метод, проверяем результат работы
+        mockMvc.perform(get("/")
+                .param("searchText", "...")
+                .param("done", "DONE"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attribute("page", hasProperty("content", is(instanceOf(List.class)))))
+                .andExpect(model().attribute("page", hasProperty("content", is(hasSize(notesSize)))));
+    }
+
+    @Test
     void sortChoose() throws Exception {
         // настраиваем mock для вызова методов сервисного слоя из тестируемого метода
         when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
@@ -101,6 +120,20 @@ class NoteControllerTest {
 
         // вызываем тестируемый метод, проверяем результат работы
         mockMvc.perform(get("/sort/ASC"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"));
+    }
+
+    @Test
+    void sortChooseDesc() throws Exception {
+        // настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
+        when(noteService.findByUserId(any(Pageable.class), anyInt()))
+                .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
+
+        // вызываем тестируемый метод, проверяем результат работы
+        mockMvc.perform(get("/sort/DESC"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));
