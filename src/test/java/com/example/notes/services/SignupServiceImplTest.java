@@ -35,19 +35,23 @@ class SignupServiceImplTest {
 
     @Test
     void signup() {
+        // Подготовим данные для настройки mock
         List<User> users = new ArrayList<>();
 
         UserRegDto userRegDto = new UserRegDto();
         userRegDto.setUsername("somebody");
 
+        // настраиваем mock
         doAnswer((Answer<Void>) invocation -> {
             User user = User.builder().username(userRegDto.getUsername()).build();
             users.add(user);
             return null;
         }).when(userService).create(userRegDto);
 
+        // вызываем тестируемый метод
         signupService.signup(userRegDto);
 
+        // проверяем результат работы
         assertEquals(1, users.size());
         assertNotNull(users.get(0));
         assertEquals(userRegDto.getUsername(), users.get(0).getUsername());
@@ -55,9 +59,11 @@ class SignupServiceImplTest {
 
     @Test
     void isFreeUsername() {
+        // настраиваем mock
         when(userService.findByUsername(anyString()))
                 .thenReturn(Optional.empty());
 
+        // вызываем тестируемый метод и проверяем результат работы
         assertTrue(signupService.isFreeUsername("somebody"));
     }
 }

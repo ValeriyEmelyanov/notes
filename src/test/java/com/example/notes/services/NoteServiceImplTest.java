@@ -52,6 +52,8 @@ class NoteServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        // Подготовим данные для настройки mock
+
         currentUser = User.builder()
                 .id(CURRENT_USER_ID)
                 .username("user")
@@ -95,10 +97,13 @@ class NoteServiceImplTest {
 
     @Test
     void getById() {
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
 
+        // вызываем тестируемый метод
         Note note = noteService.getById(1, currentUser);
 
+        // проверяем результат работы
         assertNotNull(note);
         assertEquals(noteModel.getId(), note.getId());
         assertEquals(noteModel.getMessage(), note.getMessage());
@@ -109,8 +114,10 @@ class NoteServiceImplTest {
 
     @Test
     void getByIdWithWrongUser() {
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
 
+        // вызываем тестируемый метод, проверяем результат работы
         assertThrows(IllegalArgumentException.class,
                 () -> {
                     Note note = noteService.getById(1, wrongUser);
@@ -121,6 +128,7 @@ class NoteServiceImplTest {
     void save() {
         Note newNote = new Note("New message", currentUser);
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.save(newNote))
                 .thenAnswer(
                         (Answer<Void>) invocation -> {
@@ -128,8 +136,10 @@ class NoteServiceImplTest {
                             return null;
                         });
 
+        // вызываем тестируемый метод
         noteService.save(newNote);
 
+        // проверяем результат работы
         assertEquals(notesSize + 1, notes.size());
     }
 
@@ -138,6 +148,7 @@ class NoteServiceImplTest {
         String message = "New message";
         boolean done = true;
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
         when(noteRepository.save(noteModel))
                 .thenAnswer(
@@ -148,8 +159,10 @@ class NoteServiceImplTest {
                             return null;
                         });
 
+        // вызываем тестируемый метод
         noteService.update(NOTE_ID, message, done, currentUser);
 
+        // проверяем результат работы
         assertEquals(notesSize, notes.size());
         assertEquals(NOTE_ID, noteModel.getId());
         assertEquals(message, noteModel.getMessage());
@@ -163,6 +176,7 @@ class NoteServiceImplTest {
         String message = "New message";
         boolean done = true;
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(anyInt())).thenReturn(noteModel);
         when(noteRepository.save(noteModel))
                 .thenAnswer(
@@ -173,6 +187,7 @@ class NoteServiceImplTest {
                             return null;
                         });
 
+        // вызываем тестируемый метод, проверяем результат работы
         assertThrows(IllegalArgumentException.class,
                 () -> {
                     noteService.update(NOTE_ID, message, done, wrongUser);
@@ -182,25 +197,30 @@ class NoteServiceImplTest {
 
     @Test
     void delete() {
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(NOTE_ID)).thenReturn(noteModel);
         doAnswer((Answer<Void>) invocation -> {
             notes.remove(noteModel);
             return null;
         }).when(noteRepository).deleteById(NOTE_ID);
 
+        // вызываем тестируемый метод
         noteService.delete(NOTE_ID, currentUser);
 
+        // проверяем результат работы
         assertEquals(notesSize - 1, notes.size());
     }
 
     @Test
     void deleteWithWrongUser() {
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.getOne(NOTE_ID)).thenReturn(noteModel);
         doAnswer((Answer<Void>) invocation -> {
             notes.remove(noteModel);
             return null;
         }).when(noteRepository).deleteById(NOTE_ID);
 
+        // вызываем тестируемый метод, проверяем результат работы
         assertThrows(IllegalArgumentException.class,
                 () -> {
                     noteService.delete(NOTE_ID, wrongUser);
@@ -216,11 +236,15 @@ class NoteServiceImplTest {
 
         Sort sort = new Sort(Sort.Direction.ASC, SORT_FIELD);
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
+
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.findByUserId(pageRequest, CURRENT_USER_ID))
                 .thenReturn(new PageImpl<Note>(list, pageRequest, list.size()));
 
+        // вызываем тестируемый метод
         Page<Note> page = noteService.findByUserId(pageRequest, CURRENT_USER_ID);
 
+        // проверяем результат работы
         assertEquals(Math.min(pageSize, list.size()), page.getContent().size());
     }
 
@@ -230,58 +254,77 @@ class NoteServiceImplTest {
         Sort sort = new Sort(Sort.Direction.ASC, SORT_FIELD);
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
 
+        ////////////
         // All
+
         List<Note> list = notes.stream()
                 .filter(e -> currentUser.equals(e.getUser()))
                 .collect(Collectors.toList());
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.findByUserId(pageRequest, CURRENT_USER_ID))
                 .thenReturn(new PageImpl<Note>(list, pageRequest, list.size()));
 
         FilterAdjuster filterAdjuster = new FilterAdjuster("", DoneFilterOption.ALL);
+        // вызываем тестируемый метод
         Page<Note> page = noteService.findByUserIdAndSearchParameters(pageRequest, CURRENT_USER_ID, filterAdjuster);
 
+        // проверяем результат работы
         assertEquals(Math.min(pageSize, list.size()), page.getContent().size());
 
+        ////////////
         // by Text
+
         list = notes.stream()
                 .filter(e -> currentUser.equals(e.getUser()) && e.getMessage().contains(MSG))
                 .collect(Collectors.toList());
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.findByUserIdAndSearchText(pageRequest, CURRENT_USER_ID, MSG))
                 .thenReturn(new PageImpl<Note>(list, pageRequest, list.size()));
 
         filterAdjuster = new FilterAdjuster(MSG, DoneFilterOption.ALL);
+        // вызываем тестируемый метод
         page = noteService.findByUserIdAndSearchParameters(pageRequest, CURRENT_USER_ID, filterAdjuster);
 
+        // проверяем результат работы
         assertEquals(Math.min(pageSize, list.size()), page.getContent().size());
 
+        ////////////
         // by Done
+
         final boolean done = true;
         list = notes.stream()
                 .filter(e -> currentUser.equals(e.getUser()) && e.isDone() == done)
                 .collect(Collectors.toList());
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.findByUserIdAndDone(pageRequest, CURRENT_USER_ID, done))
                 .thenReturn(new PageImpl<Note>(list, pageRequest, list.size()));
 
         filterAdjuster = new FilterAdjuster("", DoneFilterOption.DONE);
+        // вызываем тестируемый метод
         page = noteService.findByUserIdAndSearchParameters(pageRequest, CURRENT_USER_ID, filterAdjuster);
 
+        // проверяем результат работы
         assertEquals(Math.min(pageSize, list.size()), page.getContent().size());
 
+        //////////////////////
         // by Text and Done
+
         list = notes.stream()
                 .filter(e -> currentUser.equals(e.getUser()) && e.getMessage().contains(MSG) && e.isDone() == done)
                 .collect(Collectors.toList());
 
+        // настраиваем mock для вызова методов репозитория из тестируемого метода
         when(noteRepository.findByUserIdAndDoneAndSearchText(pageRequest, CURRENT_USER_ID, done, MSG))
                 .thenReturn(new PageImpl<Note>(list, pageRequest, list.size()));
 
         filterAdjuster = new FilterAdjuster(MSG, DoneFilterOption.DONE);
+        // вызываем тестируемый метод
         page = noteService.findByUserIdAndSearchParameters(pageRequest, CURRENT_USER_ID, filterAdjuster);
 
+        // проверяем результат работы
         assertEquals(Math.min(pageSize, list.size()), page.getContent().size());
-
     }
 }

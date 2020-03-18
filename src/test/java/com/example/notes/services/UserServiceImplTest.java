@@ -56,6 +56,7 @@ class UserServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        // Подготовим данные для настройки mock
         user = User.builder()
                 .id(USER_ID)
                 .username(USERNAME)
@@ -71,11 +72,14 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
 
+        // вызываем тестируемый метод
         Optional<String> usernameOptional = userService.getCurrentUsername();
 
+        // проверяем результат работы
         assertTrue(usernameOptional.isPresent());
         assertEquals(USERNAME, usernameOptional.get());
     }
@@ -86,10 +90,13 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
 
+        // вызываем тестируемый метод
         Optional<String> usernameOptional = userService.getCurrentUsername();
 
+        // проверяем результат работы
         assertFalse(usernameOptional.isPresent());
     }
 
@@ -99,12 +106,15 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
+        // вызываем тестируемый метод
         Optional<Integer> idOptional = userService.getCurrentUserId();
 
+        // проверяем результат работы
         assertTrue(idOptional.isPresent());
         assertEquals(USER_ID, idOptional.get());
     }
@@ -115,10 +125,13 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
 
+        // вызываем тестируемый метод
         Optional<Integer> idOptional = userService.getCurrentUserId();
 
+        // проверяем результат работы
         assertFalse(idOptional.isPresent());
     }
 
@@ -128,12 +141,15 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
+        // вызываем тестируемый метод
         Optional<User> userOptional = userService.getCurrentUser();
 
+        // проверяем результат работы
         assertTrue(userOptional.isPresent());
         assertEquals(user, userOptional.get());
     }
@@ -144,23 +160,27 @@ class UserServiceImplTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
+        // настраиваем mock
         when(securityContext.getAuthentication()).thenReturn(auth);
 
+        // вызываем тестируемый метод
         Optional<User> userOptional = userService.getCurrentUser();
 
+        // проверяем результат работы
         assertFalse(userOptional.isPresent());
     }
 
     @Test
     void findByUsername() {
+        // настраиваем mock
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
+        // вызываем тестируемый метод
         Optional<UserDto> userDtoOptional = userService.findByUsername(USERNAME);
 
+        // проверяем результат работы
         assertTrue(userDtoOptional.isPresent());
-
         UserDto userDto = userDtoOptional.get();
-
         assertNotNull(userDto);
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getUsername(), userDto.getUsername());
@@ -170,19 +190,25 @@ class UserServiceImplTest {
 
     @Test
     void findByUsernameFail() {
+        // настраиваем mock
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.empty());
 
+        // вызываем тестируемый метод
         Optional<UserDto> userDtoOptional = userService.findByUsername("somename");
 
+        // проверяем результат работы
         assertFalse(userDtoOptional.isPresent());
     }
 
     @Test
     void getById() {
+        // настраиваем mock
         when(userRepository.findById(USER_ID)).thenReturn(Optional.ofNullable(user));
 
+        // вызываем тестируемый метод
         UserDto userDto = userService.getById(USER_ID);
 
+        // проверяем результат работы
         assertNotNull(userDto);
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getUsername(), userDto.getUsername());
@@ -192,8 +218,10 @@ class UserServiceImplTest {
 
     @Test
     void getByIdFail() {
+        // настраиваем mock
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
+        // вызываем тестируемый метод и проверяем результат
         assertThrows(IllegalArgumentException.class, () -> userService.getById(99));
     }
 
@@ -201,6 +229,7 @@ class UserServiceImplTest {
     void create() {
         List<User> users = new ArrayList<>();
 
+        // настраиваем mock
         when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD);
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invokation -> {
@@ -212,8 +241,10 @@ class UserServiceImplTest {
         userRegDto.setUsername(USERNAME);
         userRegDto.setPassword(PASSWORD);
 
+        // вызываем тестируемый метод
         userService.create(userRegDto);
 
+        // проверяем результат работы
         assertEquals(1, users.size());
     }
 
@@ -226,10 +257,13 @@ class UserServiceImplTest {
         Sort sort = new Sort(Sort.Direction.ASC, "id");
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
 
+        // настраиваем mock
         when(userRepository.findAll(pageRequest)).thenReturn(new PageImpl<User>(users, pageRequest, users.size()));
 
+        // вызываем тестируемый метод
         Page<UserDto> page = userService.findAll(pageRequest);
 
+        // проверяем результат работы
         assertEquals(users.size(), page.getContent().size());
     }
 
@@ -238,6 +272,7 @@ class UserServiceImplTest {
         Role role = Role.ADMIN;
         boolean active = false;
 
+        // настраиваем mock
         when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invocation -> {
@@ -248,22 +283,28 @@ class UserServiceImplTest {
 
         UserDto userDto = UserDto.builder().id(USER_ID).role(role).active(active).build();
 
+        // вызываем тестируемый метод
         userService.update(userDto);
 
+        // проверяем результат работы
         assertEquals(role, user.getRole());
         assertEquals(active, user.isActive());
     }
 
     @Test
     void disable() {
+        // настраиваем mock
         when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invocation -> {
                     user.setActive(false);
                     return null;
                 });
+
+        // вызываем тестируемый метод
         userService.disable(USER_ID);
 
+        // проверяем результат работы
         assertFalse(user.isActive());
     }
 }
