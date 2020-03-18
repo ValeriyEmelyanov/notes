@@ -27,7 +27,7 @@
 * Bootstrap
 * Maven
 * Tomcat
-* JUnit 5
+* JUnit 5, Mockito
 
 ### Шаги реализации
 1. Взял за основу <a href="https://javarush.ru/groups/posts/497-zavoevanie-spring-boot">Завоевание Spring Boot</a>. 
@@ -121,5 +121,8 @@ CRUD
  
  Прочее
  * <a href="https://fontawesome.ru/all-icons/">Полная сборка из 675 иконок Font Awesome 4.7.0</b></a>
+ 
+ Тестирование
+ * <a href="http://java-online.ru/junit-mockito.xhtml">JUnit и фреймворк Mockito</b></a>
  
   
