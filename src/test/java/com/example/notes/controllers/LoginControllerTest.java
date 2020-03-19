@@ -22,10 +22,11 @@ class LoginControllerTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.initMocks(this);
+
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/templates/");
 
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(loginController)
                 .setViewResolvers(viewResolver)
                 .build();
