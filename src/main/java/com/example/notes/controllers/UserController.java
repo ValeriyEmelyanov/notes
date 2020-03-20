@@ -58,7 +58,7 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("users/disable/{id}")
+    @GetMapping("/users/disable/{id}")
     public String disable(@PathVariable Integer id) {
         userService.disable(id);
         return "redirect:/users";
