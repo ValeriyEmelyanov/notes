@@ -101,6 +101,8 @@ class UserControllerTest {
                 .andExpect(view().name("operations/usersedit"))
                 .andExpect(model().attribute("user", instanceOf(UserDto.class)))
                 .andExpect(model().attribute("roles", Role.values()));
+        // Проверякм - был один вызов метода сервисного слоя.
+        verify(userService).getById(anyInt());
     }
 
     @Test

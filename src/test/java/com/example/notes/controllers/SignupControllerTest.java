@@ -1,6 +1,6 @@
 package com.example.notes.controllers;
 
-import com.example.notes.services.SignupServiceImpl;
+import com.example.notes.services.SignupService;
 import com.example.notes.transfer.UserRegDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class SignupControllerTest {
     SignupController signupController;
 
     @Mock
-    SignupServiceImpl signupService;
+    SignupService signupService;
 
     private MockMvc mockMvc;
 
@@ -50,7 +50,7 @@ class SignupControllerTest {
 
     @Test
     void signup() throws Exception {
-        // Вызываем тестируемый метод, проверяем результат работы
+        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/signup"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -60,11 +60,11 @@ class SignupControllerTest {
 
     @Test
     void signupPost() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы
+        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -72,17 +72,17 @@ class SignupControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/login"));
-        // проверякм - был один вызов метода сервисного слоя
+        // Проверякм - был один вызов метода сервисного слоя.
         verify(signupService).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostHasError() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы
+        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -91,17 +91,17 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // проверякм - вызова метода сервисного слоя НЕ было
+        // Проверякм - вызова метода сервисного слоя НЕ было.
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostNotFree() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(false);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы
+        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -110,17 +110,17 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // проверякм - вызова метода сервисного слоя НЕ было
+        // Проверякм - вызова метода сервисного слоя НЕ было.
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostNotMatching() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода
+        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы
+        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -129,7 +129,7 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // проверякм - вызова метода сервисного слоя НЕ было
+        // Проверякм - вызова метода сервисного слоя НЕ было.
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 }
