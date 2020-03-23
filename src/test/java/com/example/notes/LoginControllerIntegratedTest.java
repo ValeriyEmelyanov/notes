@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +32,7 @@ class LoginControllerIntegratedTest {
     private MockMvc mockMvc;
 
     @Test
-    public void loginRedirect() throws Exception {
+    void loginRedirect() throws Exception {
         assertNotNull(loginController);
 
         mockMvc.perform(get("/"))
@@ -41,7 +42,7 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    public void login() throws Exception {
+    void login() throws Exception {
         mockMvc.perform(get("/login"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -50,7 +51,7 @@ class LoginControllerIntegratedTest {
 
     @Test
     @WithMockUser
-    public void loginWithAuth() throws Exception {
+    void loginWithAuth() throws Exception {
         mockMvc.perform(get("/login"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -58,7 +59,7 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    public void loginWithError() throws Exception {
+    void loginWithError() throws Exception {
         mockMvc.perform(get("/login?error"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -67,7 +68,8 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    public void loginForm() throws Exception {
+    @Sql({"data.sql"})
+    void loginForm() throws Exception {
         mockMvc.perform(formLogin().user("admin").password("12345"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -75,8 +77,18 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    public void loginFail() throws Exception {
-        mockMvc.perform(formLogin().user("somebody").password("wrongpassword"))
+    @Sql({"data.sql"})
+    void loginWrongUser() throws Exception {
+        mockMvc.perform(formLogin().user("wronguser").password("wrongpassword"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    @Sql({"data.sql"})
+    void loginDisabledUser() throws Exception {
+        mockMvc.perform(formLogin().user("user2").password("12345"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?error"));
