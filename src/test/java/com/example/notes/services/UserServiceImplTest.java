@@ -56,7 +56,7 @@ class UserServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        // Подготовим данные для настройки mock
+        // Подготовим данные для настройки mock.
         user = User.builder()
                 .id(USER_ID)
                 .username(USERNAME)
@@ -68,117 +68,123 @@ class UserServiceImplTest {
 
     @Test
     void getCurrentUsername() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<String> usernameOptional = userService.getCurrentUsername();
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertTrue(usernameOptional.isPresent());
         assertEquals(USERNAME, usernameOptional.get());
     }
 
     @Test
     void getCurrentUsernameFail() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(AnonymousAuthenticationToken.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<String> usernameOptional = userService.getCurrentUsername();
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertFalse(usernameOptional.isPresent());
     }
 
     @Test
     void getCurrentUserId() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<Integer> idOptional = userService.getCurrentUserId();
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertTrue(idOptional.isPresent());
         assertEquals(USER_ID, idOptional.get());
     }
 
     @Test
     void getCurrentUserIdFail() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(AnonymousAuthenticationToken.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<Integer> idOptional = userService.getCurrentUserId();
 
-        // проверяем результат работы
+        // Вроверяем результат работы.
         assertFalse(idOptional.isPresent());
     }
 
     @Test
     void getCurrentUser() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
         when(auth.getName()).thenReturn(USERNAME);
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<User> userOptional = userService.getCurrentUser();
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertTrue(userOptional.isPresent());
         assertEquals(user, userOptional.get());
     }
 
     @Test
     void getCurrentUserFail() {
+        // Подготовим данные для настройки mock - контекст безопасности.
         Authentication auth = mock(AnonymousAuthenticationToken.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(securityContext.getAuthentication()).thenReturn(auth);
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<User> userOptional = userService.getCurrentUser();
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertFalse(userOptional.isPresent());
     }
 
     @Test
     void findByUsername() {
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.ofNullable(user));
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<UserDto> userDtoOptional = userService.findByUsername(USERNAME);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertTrue(userDtoOptional.isPresent());
         UserDto userDto = userDtoOptional.get();
         assertNotNull(userDto);
@@ -190,25 +196,25 @@ class UserServiceImplTest {
 
     @Test
     void findByUsernameFail() {
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findOneByUsername(anyString())).thenReturn(Optional.empty());
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Optional<UserDto> userDtoOptional = userService.findByUsername("somename");
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertFalse(userDtoOptional.isPresent());
     }
 
     @Test
     void getById() {
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findById(USER_ID)).thenReturn(Optional.ofNullable(user));
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         UserDto userDto = userService.getById(USER_ID);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertNotNull(userDto);
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getUsername(), userDto.getUsername());
@@ -218,10 +224,10 @@ class UserServiceImplTest {
 
     @Test
     void getByIdFail() {
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        // вызываем тестируемый метод и проверяем результат
+        // Вызываем тестируемый метод и проверяем результат.
         assertThrows(IllegalArgumentException.class, () -> userService.getById(99));
     }
 
@@ -229,7 +235,7 @@ class UserServiceImplTest {
     void create() {
         List<User> users = new ArrayList<>();
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD);
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invokation -> {
@@ -237,14 +243,15 @@ class UserServiceImplTest {
                     return null;
                 });
 
+        // Подготовим параметр для вызова тестируемого метода.
         UserRegDto userRegDto = new UserRegDto();
         userRegDto.setUsername(USERNAME);
         userRegDto.setPassword(PASSWORD);
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         userService.create(userRegDto);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertEquals(1, users.size());
     }
 
@@ -257,13 +264,13 @@ class UserServiceImplTest {
         Sort sort = new Sort(Sort.Direction.ASC, "id");
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findAll(pageRequest)).thenReturn(new PageImpl<User>(users, pageRequest, users.size()));
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         Page<UserDto> page = userService.findAll(pageRequest);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertEquals(users.size(), page.getContent().size());
     }
 
@@ -272,7 +279,7 @@ class UserServiceImplTest {
         Role role = Role.ADMIN;
         boolean active = false;
 
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invocation -> {
@@ -281,19 +288,20 @@ class UserServiceImplTest {
                     return null;
                 });
 
+        // Подготовим параметр для вызова тестируемого метода.
         UserDto userDto = UserDto.builder().id(USER_ID).role(role).active(active).build();
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         userService.update(userDto);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertEquals(role, user.getRole());
         assertEquals(active, user.isActive());
     }
 
     @Test
     void disable() {
-        // настраиваем mock
+        // Настраиваем mock.
         when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(user));
         when(userRepository.save(any(User.class)))
                 .thenAnswer((Answer<Void>) invocation -> {
@@ -301,10 +309,10 @@ class UserServiceImplTest {
                     return null;
                 });
 
-        // вызываем тестируемый метод
+        // Вызываем тестируемый метод.
         userService.disable(USER_ID);
 
-        // проверяем результат работы
+        // Проверяем результат работы.
         assertFalse(user.isActive());
     }
 }
