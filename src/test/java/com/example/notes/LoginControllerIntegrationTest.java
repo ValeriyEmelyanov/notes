@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class LoginControllerIntegratedTest {
+class LoginControllerIntegrationTest {
 
     @Autowired
     LoginController loginController;

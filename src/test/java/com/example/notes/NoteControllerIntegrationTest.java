@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class NoteControllerIntegratedTest {
+class NoteControllerIntegrationTest {
 
     @Autowired
     private NoteController noteController;
