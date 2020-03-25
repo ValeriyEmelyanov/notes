@@ -68,7 +68,7 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    @Sql({"data.sql"})
+    @Sql({"data_users.sql"})
     void loginForm() throws Exception {
         mockMvc.perform(formLogin().user("admin").password("12345"))
                 .andDo(print())
@@ -77,7 +77,7 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    @Sql({"data.sql"})
+    @Sql({"data_users.sql"})
     void loginWrongUser() throws Exception {
         mockMvc.perform(formLogin().user("wronguser").password("wrongpassword"))
                 .andDo(print())
@@ -86,7 +86,7 @@ class LoginControllerIntegratedTest {
     }
 
     @Test
-    @Sql({"data.sql"})
+    @Sql({"data_users.sql"})
     void loginDisabledUser() throws Exception {
         mockMvc.perform(formLogin().user("user2").password("12345"))
                 .andDo(print())

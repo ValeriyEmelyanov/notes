@@ -21,6 +21,7 @@
  
 
 ### Используемые технологии
+* Java 8
 * Spring Boot, Spring MVC, Spring Data JPA, Spring Security
 * MySql
 * Thymeleaf
