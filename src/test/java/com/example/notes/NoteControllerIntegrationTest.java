@@ -1,11 +1,9 @@
 package com.example.notes;
 
-import com.example.notes.controllers.NoteController;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.services.NoteService;
-import com.example.notes.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,12 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class NoteControllerIntegrationTest {
-
-    @Autowired
-    private NoteController noteController;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private NoteService noteService;
