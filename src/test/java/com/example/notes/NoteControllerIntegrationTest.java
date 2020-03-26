@@ -47,7 +47,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void list() throws Exception {
         // Контрольные данные (см. data_notes.sql)
         int pageListSize = 10;
@@ -64,7 +64,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "user1", password = "12345")
+    @WithMockUser(username = "user1")
     void listWithUser() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
@@ -74,7 +74,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void listFiltered() throws Exception {
         // Контрольные размер списка (см. data_notes.sql)
         int pageListSize = 2;
@@ -119,7 +119,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void sortChoose() throws Exception {
         mockMvc.perform(get("/sort/ASC"))
                 .andDo(print())
@@ -130,7 +130,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "user1 ", password = "12345")
+    @WithMockUser(username = "user1")
     void sortChooseDesc() throws Exception {
         mockMvc.perform(get("/sort/DESC"))
                 .andDo(print())
@@ -141,7 +141,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void page() throws Exception {
         mockMvc.perform(get("/list"))
                 .andDo(print())
@@ -151,7 +151,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void newNote() throws Exception {
         mockMvc.perform(get("/new"))
                 .andDo(print())
@@ -161,7 +161,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void save() throws Exception {
         // Контрольные данные
         String message = "New message";
@@ -188,7 +188,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void edit() throws Exception {
         // Контрольные данные (см. data_notes.sql)
         Integer id = 1;
@@ -208,7 +208,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void update() throws Exception {
         // Контрольные данные
         Integer id = 1;
@@ -224,7 +224,7 @@ class NoteControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        // Извлечем измененную заметку и проверим результат
+        // Получим измененную заметку и проверим результат
         User user = User.builder()
                 .id(1)
                 .username("admin")
@@ -241,7 +241,7 @@ class NoteControllerIntegrationTest {
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
-    @WithMockUser(username = "admin", password = "12345")
+    @WithMockUser(username = "admin")
     void delete() throws Exception {
         // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/delete/1"))
