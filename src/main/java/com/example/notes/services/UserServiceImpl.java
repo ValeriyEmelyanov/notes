@@ -50,15 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Integer> getCurrentUserId() {
-        Optional<String> optionalUsername = getCurrentUsername();
-        if (optionalUsername.isPresent()) {
-            return userRepository.findOneByUsername(optionalUsername.get()).map(User::getId);
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public Optional<User> getCurrentUser() {
         Optional<String> optionalUsername = getCurrentUsername();
         if (optionalUsername.isPresent()) {

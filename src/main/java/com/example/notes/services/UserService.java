@@ -9,16 +9,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 /**
- * Интерфейс сервиса пользователей
+ * Интерфейс сервиса пользователей.
+ * Удаление физическое отсутствует - у пользователя снимается флажок активности.
  */
 public interface UserService {
-    // Для определения текущего пользователя
     Optional<String> getCurrentUsername();
-    Optional<Integer> getCurrentUserId();
     Optional<User> getCurrentUser();
 
-    // CRUD-операции для управления списком пользователей
-    // * Удаление фиизическое отсутствует - у пользователя снимается флажок активности
     Optional<UserDto> findByUsername(String username);
     UserDto getById(Integer id);
     void create(UserRegDto userRegDto);

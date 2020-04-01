@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -33,6 +34,7 @@ class SignupControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithAnonymousUser
     void signup() throws Exception {
         mockMvc.perform(get("/signup"))
                 .andDo(print())
@@ -43,11 +45,9 @@ class SignupControllerIntegrationTest {
 
     @Test
     void signupPost() throws Exception {
-        // Данные для добавления пользователя.
         String username = "newuser";
         String password = "12345";
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(post("/signup")
                 .param("username", username)
                 .param("password", password)
@@ -56,7 +56,6 @@ class SignupControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
 
-        // Получим добавленного пользователя и проверим
         Optional<UserDto> optionalUserDto = userService.findByUsername(username);
         if (!optionalUserDto.isPresent())
             throw new Exception("The user is not added!");
@@ -66,11 +65,9 @@ class SignupControllerIntegrationTest {
 
     @Test
     void signupPostError() throws Exception {
-        // Данные для добавления пользователя.
         String username = "newuser";
         String password = "12345";
 
-        // Делаем вызовы и проверяем результат.
         mockMvc.perform(post("/signup")
                 .param("password", password)
                 .param("matchingPassword", password))
@@ -90,11 +87,9 @@ class SignupControllerIntegrationTest {
     @Test
     @Sql({"data_users.sql"})
     void signupPostNotFreeUserName() throws Exception {
-        // Данные для добавления пользователя.
         String username = "user1";
         String password = "12345";
 
-        // Делаем вызовы и проверяем результат.
         mockMvc.perform(post("/signup")
                 .param("username", username)
                 .param("password", password)
@@ -107,12 +102,10 @@ class SignupControllerIntegrationTest {
 
     @Test
     void signupPostNotMatchingPassword() throws Exception {
-        // Данные для добавления пользователя.
         String username = "user1";
         String password = "12345";
         String matchingPassword = "54321";
 
-        // Делаем вызовы и проверяем результат.
         mockMvc.perform(post("/signup")
                 .param("username", username)
                 .param("password", password)

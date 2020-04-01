@@ -49,7 +49,6 @@ public class NoteController {
                        FilterAdjuster filterAdjuster,
                        Model model) {
 
-        // Определим сортировку
         if (sortDateOrder != null && sortDateOrder.toUpperCase().equals(SORT_ORDER_DESC)) {
             sortDateOrder = SORT_ORDER_DESC;
         } else {
@@ -59,21 +58,17 @@ public class NoteController {
                 sortDateOrder.equals(SORT_ORDER_DESC) ? Sort.Direction.DESC : Sort.Direction.ASC,
                 SORT_FIELD);
 
-        // Подготовим парамеры страницы
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         Page<Note> page = null;
 
-        // Получим Id текущего пользователя
-        Integer userId = userService.getCurrentUserId().orElseThrow(IllegalArgumentException::new);
+        User currentUser = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
 
-        // Получим страницу
         if (filterAdjuster.isAll()) {
-            page = noteService.findByUserId(pageRequest, userId);
+            page = noteService.findByUser(pageRequest, currentUser);
         } else {
-            page = noteService.findByUserIdAndSearchParameters(pageRequest, userId, filterAdjuster);
+            page = noteService.findByUserAndSearchParameters(pageRequest, currentUser, filterAdjuster);
         }
 
-        // Установим атрибуты модели
         model.addAttribute("page", page);
         model.addAttribute("sortDateOrder", sortDateOrder);
         model.addAttribute("filterAdjuster", filterAdjuster);

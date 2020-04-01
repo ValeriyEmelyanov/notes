@@ -15,6 +15,6 @@ public interface NoteService {
     void update(Integer id, String message, boolean done, User user);
     void delete(Integer id, User user);
 
-    Page<Note> findByUserId(Pageable pageable, Integer userId);
-    Page<Note> findByUserIdAndSearchParameters(Pageable pageable, Integer userId, FilterAdjuster filterAdjuster);
+    Page<Note> findByUser(Pageable pageable, User user);
+    Page<Note> findByUserAndSearchParameters(Pageable pageable, User user, FilterAdjuster filterAdjuster);
 }

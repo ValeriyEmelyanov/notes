@@ -78,26 +78,26 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Page<Note> findByUserId(Pageable pageable, Integer userId) {
-        return repository.findByUserId(pageable, userId);
+    public Page<Note> findByUser(Pageable pageable, User user) {
+        return repository.findByUser(pageable, user);
     }
 
     @Override
-    public Page<Note> findByUserIdAndSearchParameters(Pageable pageable,
-                                                      Integer userId, FilterAdjuster filterAdjuster) {
+    public Page<Note> findByUserAndSearchParameters(
+            Pageable pageable, User user, FilterAdjuster filterAdjuster) {
 
         if (filterAdjuster.isAll()) {
-            return findByUserId(pageable, userId);
+            return findByUser(pageable, user);
         }
         if (filterAdjuster.getDone() == DoneFilterOption.ALL && !filterAdjuster.getSearchText().isEmpty()) {
-            return repository.findByUserIdAndSearchText(pageable,
-                    userId, filterAdjuster.getSearchText());
+            return repository.findByUserAndMessageContaining(
+                    pageable, user, filterAdjuster.getSearchText());
         }
         if (filterAdjuster.getDone() != DoneFilterOption.ALL && filterAdjuster.getSearchText().isEmpty()) {
-            return repository.findByUserIdAndDone(pageable,
-                    userId, filterAdjuster.getDone() == DoneFilterOption.DONE);
+            return repository.findByUserAndDone(pageable,
+                    user, filterAdjuster.getDone() == DoneFilterOption.DONE);
         }
-        return repository.findByUserIdAndDoneAndSearchText(pageable,
-                userId, filterAdjuster.getDone() == DoneFilterOption.DONE, filterAdjuster.getSearchText());
+        return repository.findByUserAndDoneAndMessageContaining(pageable,
+                user, filterAdjuster.getDone() == DoneFilterOption.DONE, filterAdjuster.getSearchText());
     }
 }

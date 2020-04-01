@@ -67,7 +67,6 @@ class NoteControllerTest {
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
 
-        // Подготовим данные для настройки mockMvc.
         notes = new ArrayList<>();
         notes.add(new Note());
         notes.add(new Note());
@@ -80,33 +79,29 @@ class NoteControllerTest {
 
     @Test
     void list() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
-        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
-        when(noteService.findByUserId(any(Pageable.class), anyInt()))
+        when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
+        when(noteService.findByUser(any(Pageable.class), any(User.class)))
                 .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
                 .andExpect(model().attribute("page", hasProperty("content", is(instanceOf(List.class)))))
                 .andExpect(model().attribute("page", hasProperty("content", is(hasSize(notesSize)))));
-        // Проверякм вызовы методов сервисного слоя.
-        verify(noteService, never()).findByUserIdAndSearchParameters(
-                any(Pageable.class), anyInt(), any(FilterAdjuster.class));
-        verify(noteService).findByUserId(any(Pageable.class), anyInt());
+
+        verify(noteService, never()).findByUserAndSearchParameters(
+                any(Pageable.class), any(User.class), any(FilterAdjuster.class));
+        verify(noteService).findByUser(any(Pageable.class), any(User.class));
     }
 
     @Test
     void listWithFilter() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
-        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
-        when(noteService.findByUserIdAndSearchParameters(
-                any(Pageable.class), anyInt(), any(FilterAdjuster.class)))
+        when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
+        when(noteService.findByUserAndSearchParameters(
+                any(Pageable.class), any(User.class), any(FilterAdjuster.class)))
                 .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/")
                 .param("searchText", "...")
                 .param("done", "DONE"))
@@ -115,20 +110,18 @@ class NoteControllerTest {
                 .andExpect(view().name("index"))
                 .andExpect(model().attribute("page", hasProperty("content", is(instanceOf(List.class)))))
                 .andExpect(model().attribute("page", hasProperty("content", is(hasSize(notesSize)))));
-        // Проверякм вызовы методов сервисного слоя.
-        verify(noteService).findByUserIdAndSearchParameters(
-                any(Pageable.class), anyInt(), any(FilterAdjuster.class));
-        verify(noteService, never()).findByUserId(any(Pageable.class), anyInt());
+
+        verify(noteService).findByUserAndSearchParameters(
+                any(Pageable.class), any(User.class), any(FilterAdjuster.class));
+        verify(noteService, never()).findByUser(any(Pageable.class), any(User.class));
     }
 
     @Test
     void sortChoose() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
-        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
-        when(noteService.findByUserId(any(Pageable.class), anyInt()))
+        when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
+        when(noteService.findByUser(any(Pageable.class), any(User.class)))
                 .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/sort/ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -137,12 +130,10 @@ class NoteControllerTest {
 
     @Test
     void sortChooseDesc() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
-        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
-        when(noteService.findByUserId(any(Pageable.class), anyInt()))
+        when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
+        when(noteService.findByUser(any(Pageable.class), any(User.class)))
                 .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/sort/DESC"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -151,12 +142,10 @@ class NoteControllerTest {
 
     @Test
     void page() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
-        when(userService.getCurrentUserId()).thenReturn(Optional.of(1));
-        when(noteService.findByUserId(any(Pageable.class), anyInt()))
+        when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
+        when(noteService.findByUser(any(Pageable.class), any(User.class)))
                 .thenReturn(new PageImpl<Note>(notes, pageRequest, notes.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/list"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -173,45 +162,39 @@ class NoteControllerTest {
 
     @Test
     void save() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
         doAnswer((Answer<Void>) invocation -> null)
                 .when(noteService).save(any(Note.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/save")
                 .param("message", "new message"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(noteService).save(any(Note.class));
     }
 
     @Test
     void edit() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
         when(noteService.getById(anyInt(), any(User.class))).thenReturn(new Note());
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/edit/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("operations/edit"))
                 .andExpect(model().attribute("note", instanceOf(Note.class)));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(noteService).getById(anyInt(), any(User.class));
     }
 
     @Test
     void update() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
         doAnswer((Answer<Void>) invocation -> null)
                 .when(noteService).update(anyInt(), anyString(), anyBoolean(), any(User.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/update")
                 .param("id", "1")
                 .param("message", "new message")
@@ -219,23 +202,21 @@ class NoteControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(noteService).update(anyInt(), anyString(), anyBoolean(), any(User.class));
     }
 
     @Test
     void delete() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
         doAnswer((Answer<Void>) invocation -> null)
                 .when(noteService).delete(anyInt(), any(User.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/delete/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(noteService).delete(anyInt(), any(User.class));
     }
 }

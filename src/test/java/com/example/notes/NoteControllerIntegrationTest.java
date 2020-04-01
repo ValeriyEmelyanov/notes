@@ -4,6 +4,7 @@ import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.services.NoteService;
+import com.example.notes.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -43,16 +44,17 @@ class NoteControllerIntegrationTest {
     private NoteService noteService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
     void list() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         int pageListSize = 10;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -76,10 +78,8 @@ class NoteControllerIntegrationTest {
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
     void listFiltered() throws Exception {
-        // Контрольные размер списка (см. data_notes.sql)
         int pageListSize = 2;
 
-        // Проверяем фильтр по контекстной строке.
         mockMvc.perform(get("/")
                 .param("searchText", "ext"))
                 .andDo(print())
@@ -89,10 +89,8 @@ class NoteControllerIntegrationTest {
                 .andExpect(model().attribute("page", hasProperty("content", instanceOf(List.class))))
                 .andExpect(model().attribute("page", hasProperty("content", hasSize(pageListSize))));
 
-        // Контрольные размер списка (см. data_notes.sql)
         pageListSize = 3;
 
-        // Проверяем фильтр по отметке сделано.
         mockMvc.perform(get("/")
                 .param("done", "DONE"))
                 .andDo(print())
@@ -102,10 +100,8 @@ class NoteControllerIntegrationTest {
                 .andExpect(model().attribute("page", hasProperty("content", instanceOf(List.class))))
                 .andExpect(model().attribute("page", hasProperty("content", hasSize(pageListSize))));
 
-        // Контрольные размер списка (см. data_notes.sql)
         pageListSize = 1;
 
-        // Проверяем фильтр по контекстной строке и отметке сделано.
         mockMvc.perform(get("/")
                 .param("searchText", "ext")
                 .param("done", "DONE"))
@@ -163,20 +159,20 @@ class NoteControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin")
     void save() throws Exception {
-        // Контрольные данные
         String message = "New message";
         int sizeAfter = 1;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(post("/save")
                 .param("message", message))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        // Извлечем сохраненную заметку и проверим результат
         Integer userId = 1;
-        Page<Note> page = noteService.findByUserId(PageRequest.of(0, 10, Sort.unsorted()), userId);
+        User user = new User();
+        user.setId(userId);
+        Page<Note> page = noteService.findByUser(PageRequest.of(0, 10, Sort.unsorted()), user);
+
         List<Note> notes = page.getContent();
         if (notes.isEmpty()) throw new Exception("Note not saved!");
         Note note = notes.get(0);
@@ -190,12 +186,10 @@ class NoteControllerIntegrationTest {
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
     void edit() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         Integer id = 1;
         String message = "Note 1 ext";
         boolean done = false;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/edit/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -210,12 +204,10 @@ class NoteControllerIntegrationTest {
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
     void update() throws Exception {
-        // Контрольные данные
         Integer id = 1;
         String message = "Note 1 updated";
         boolean done = true;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(post("/update")
                 .param("id", String.valueOf(id))
                 .param("message", message)
@@ -224,7 +216,6 @@ class NoteControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        // Получим измененную заметку и проверим результат
         User user = User.builder()
                 .id(1)
                 .username("admin")
@@ -243,13 +234,11 @@ class NoteControllerIntegrationTest {
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
     void delete() throws Exception {
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/delete/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        // Пытаемся получить удаленную заметку
         User user = User.builder()
                 .id(1)
                 .username("admin")
