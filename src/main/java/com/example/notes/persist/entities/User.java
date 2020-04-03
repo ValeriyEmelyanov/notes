@@ -21,7 +21,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -117,49 +116,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, username, encryptedPassword, role, active);
     }
-
-    public static UserBuilder builder() {
-        return new UserBuilder();
-    }
-
-    /**
-     * Билдер для создания нового пользователя
-     */
-    public static class UserBuilder {
-        private User user;
-
-        UserBuilder() {
-            this.user = new User();
-        }
-
-        public UserBuilder id(int id) {
-            this.user.setId(id);
-            return this;
-        }
-
-        public UserBuilder username(String username) {
-            this.user.setUsername(username);
-            return this;
-        }
-
-        public UserBuilder encryptedPassword(String encryptedPassword) {
-            this.user.setEncryptedPassword(encryptedPassword);
-            return this;
-        }
-
-        public UserBuilder role(Role role) {
-            this.user.setRole(role);
-            return this;
-        }
-
-        public UserBuilder active(boolean active) {
-            this.user.setActive(active);
-            return this;
-        }
-
-        public User build() {
-            return this.user;
-        }
-    }
-
 }

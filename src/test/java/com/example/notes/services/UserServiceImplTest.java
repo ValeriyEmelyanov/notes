@@ -36,6 +36,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Модульный тест сервиса UserServiceImpl
+ */
 class UserServiceImplTest {
     private static final Integer USER_ID = 1;
     private static final String USERNAME = "username";
@@ -56,13 +59,7 @@ class UserServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        user = User.builder()
-                .id(USER_ID)
-                .username(USERNAME)
-                .encryptedPassword(PASSWORD)
-                .role(Role.USER)
-                .active(true)
-                .build();
+        user = new User(USER_ID, USERNAME, PASSWORD, Role.USER, true);
     }
 
     @Test
@@ -215,8 +212,7 @@ class UserServiceImplTest {
                     return null;
                 });
 
-        UserDto userDto = UserDto.builder().id(USER_ID).role(role).active(active).build();
-
+        UserDto userDto = new UserDto(USER_ID, USERNAME, role, active);
         userService.update(userDto);
 
         assertEquals(role, user.getRole());

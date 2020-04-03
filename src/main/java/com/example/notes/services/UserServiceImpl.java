@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Получает Optional имени текущего аутотентифицированного пользователя.
+     *
+     * @return Optional имени текущего аутотентифицированного пользователя.
+     */
     @Override
     public Optional<String> getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,6 +54,11 @@ public class UserServiceImpl implements UserService {
         return Optional.of(auth.getName());
     }
 
+    /**
+     * Получает Optional текущего пользователя.
+     *
+     * @return Optional текущего пользователя.
+     */
     @Override
     public Optional<User> getCurrentUser() {
         Optional<String> optionalUsername = getCurrentUsername();
@@ -58,21 +68,32 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    /**
+     * Ищет пользователя по имени.
+     *
+     * @param username Имя пользователя.
+     * @return         Optional искомого пользователя.
+     */
     @Override
     public Optional<UserDto> findByUsername(String username) {
         Optional<User> optionalUser = userRepository.findOneByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            return Optional.of(UserDto.builder()
-                    .id(user.getId())
-                    .username(user.getUsername())
-                    .role(user.getRole())
-                    .active(user.isActive())
-                    .build());
+            return Optional.of(new UserDto(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole(),
+                    user.isActive()));
         }
         return Optional.empty();
     }
 
+    /**
+     * Получает DTO-объект пользователя по идентификатору.
+     *
+     * @param id Идентификатор пользователя.
+     * @return   DTO-объект пользователя.
+     */
     @Override
     public UserDto getById(Integer id) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -80,45 +101,56 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("No user with such id!");
         }
         User user = optionalUser.get();
-        return UserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .active(user.isActive())
-                .build();
+        return new UserDto(
+                user.getId(),
+                user.getUsername(),
+                user.getRole(),
+                user.isActive());
     }
 
+    /**
+     * Создает нового пользователя.
+     *
+     * @param userRegDto Регистрационные данные.
+     */
     @Override
     public void create(UserRegDto userRegDto) {
         String encryptedPassword = passwordEncoder.encode(userRegDto.getPassword());
-        User newUser = User.builder()
-                .username(userRegDto.getUsername())
-                .encryptedPassword(encryptedPassword)
-                .role(Role.USER)
-                .active(true)
-                .build();
+        User newUser = new User();
+        newUser.setUsername(userRegDto.getUsername());
+        newUser.setEncryptedPassword(encryptedPassword);
+        newUser.setRole(Role.USER);
+        newUser.setActive(true);
+
         userRepository.save(newUser);
     }
 
+    /**
+     * Получает страницу со списком пользователей.
+     *
+     * @param pageable Параметры страницы.
+     * @return         Страницу со списком пользователей.
+     */
     @Override
     public Page<UserDto> findAll(Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(pageable);
         List<User> users = usersPage.getContent();
 
         List<UserDto> userDtos = users.stream()
-                .map(u -> UserDto.builder()
-                        .id(u.getId())
-                        .username(u.getUsername())
-                        .role(u.getRole())
-                        .active(u.isActive())
-                        .build()).collect(Collectors.toList());
+                .map(u -> new UserDto(
+                        u.getId(),
+                        u.getUsername(),
+                        u.getRole(),
+                        u.isActive()))
+                .collect(Collectors.toList());
 
         return new PageImpl<UserDto>(userDtos, pageable, usersPage.getTotalElements());
     }
 
     /**
-     * Сохраняет изменения у пользователя. Можно поменять роль и активность.
-     * @param userDto измененные данные пользователя
+     * Сохраняет изменения пользователя. Можно поменять роль и активность.
+     *
+     * @param userDto Измененные данные пользователя.
      */
     @Override
     public void update(UserDto userDto) {
@@ -128,6 +160,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Деактивирует/отключает пользователя.
+     *
+     * @param id Идентификатор пользователя.
+     */
     @Override
     public void disable(Integer id) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);

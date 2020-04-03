@@ -29,6 +29,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+/**
+ * Модульный тест сервиса NoteServiceImpl
+ */
 class NoteServiceImplTest {
     private static final Integer CURRENT_USER_ID = 1;
     private static final Integer NOTE_ID = 1;
@@ -52,44 +55,39 @@ class NoteServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        currentUser = User.builder()
-                .id(CURRENT_USER_ID)
-                .username("user")
-                .encryptedPassword("12345")
-                .role(Role.USER)
-                .active(true)
-                .build();
+        currentUser = new User(CURRENT_USER_ID, "user", "12345", Role.USER, true);
 
-        wrongUser = User.builder().id(99).build();
+        wrongUser = new User();
+        wrongUser.setId(99);
 
-        noteModel = Note.builder()
-                .id(NOTE_ID)
-                .message(MSG)
-                .date(DATE_NOW)
-                .done(false)
-                .user(currentUser)
-                .build();
+        noteModel = new Note();
+        noteModel.setId(NOTE_ID);
+        noteModel.setMessage(MSG);
+        noteModel.setDate(DATE_NOW);
+        noteModel.setUser(currentUser);
 
         notes = new ArrayList<>();
         notes.add(noteModel);
-        notes.add(Note.builder()
-                .id(NOTE_ID + 1)
-                .message("Some text")
-                .done(false)
-                .user(currentUser)
-                .build());
-        notes.add(Note.builder()
-                .id(NOTE_ID + 2)
-                .message(MSG)
-                .done(true)
-                .user(currentUser)
-                .build());
-        notes.add(Note.builder()
-                .id(NOTE_ID + 3)
-                .message("Wrong note")
-                .done(false)
-                .user(wrongUser)
-                .build());
+
+        Note notePlus1 = new Note();
+        notePlus1.setId(NOTE_ID + 1);
+        notePlus1.setMessage("Some text");
+        notePlus1.setUser(currentUser);
+        notes.add(notePlus1);
+
+        Note notePlus2 = new Note();
+        notePlus2.setId(NOTE_ID + 2);
+        notePlus2.setMessage(MSG);
+        notePlus2.setDone(true);
+        notePlus2.setUser(currentUser);
+        notes.add(notePlus2);
+
+        Note notePlus3 = new Note();
+        notePlus3.setId(NOTE_ID + 3);
+        notePlus3.setMessage("Wrong note");
+        notePlus3.setUser(wrongUser);
+        notes.add(notePlus3);
+
         notesSize = notes.size();
     }
 

@@ -53,44 +53,4 @@ public class UserDto {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-    public static UserDtoBuilder builder() {
-        return new UserDtoBuilder();
-    }
-
-    /**
-     * Билдер для содания нового пользователя для пережачи данных
-     */
-    public static class UserDtoBuilder {
-        private UserDto userDto;
-
-        UserDtoBuilder() {
-            this.userDto = new UserDto();
-        }
-
-        public UserDtoBuilder id(int id) {
-            this.userDto.setId(id);
-            return this;
-        }
-
-        public UserDtoBuilder username(String username) {
-            this.userDto.setUsername(username);
-            return this;
-        }
-
-        public UserDtoBuilder role(Role role) {
-            this.userDto.setRole(role);
-            return this;
-        }
-
-        public UserDtoBuilder active(boolean active) {
-            this.userDto.setActive(active);
-            return this;
-        }
-
-        public UserDto build() {
-            return this.userDto;
-        }
-    }
-
 }

@@ -16,7 +16,6 @@ import java.util.Date;
 @Entity
 @Table(name = "notes")
 public class Note {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -82,49 +81,5 @@ public class Note {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public static NoteBuilder builder() {
-        return new NoteBuilder();
-    }
-
-    /**
-     * Билдер для создания новой заметки
-     */
-    public static class NoteBuilder {
-        private Note note;
-
-        public NoteBuilder() {
-            this.note = new Note();
-        }
-
-        public NoteBuilder id(Integer id) {
-            this.note.setId(id);
-            return this;
-        }
-
-        public NoteBuilder message(String message) {
-            this.note.setMessage(message);
-            return this;
-        }
-
-        public NoteBuilder date(Date date) {
-            this.note.setDate(date);
-            return this;
-        }
-
-        public NoteBuilder done(boolean done) {
-            this.note.setDone(done);
-            return this;
-        }
-
-        public NoteBuilder user(User user) {
-            this.note.setUser(user);
-            return this;
-        }
-
-        public Note build() {
-            return this.note;
-        }
     }
 }

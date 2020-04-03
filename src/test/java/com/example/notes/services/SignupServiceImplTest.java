@@ -20,6 +20,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+/**
+ * Модульный тест сервиса SignupServiceImpl
+ */
 class SignupServiceImplTest {
 
     @InjectMocks
@@ -35,23 +38,20 @@ class SignupServiceImplTest {
 
     @Test
     void signup() {
-        // Подготовим данные для настройки mock.
         List<User> users = new ArrayList<>();
 
         UserRegDto userRegDto = new UserRegDto();
         userRegDto.setUsername("somebody");
 
-        // Настраиваем mock.
         doAnswer((Answer<Void>) invocation -> {
-            User user = User.builder().username(userRegDto.getUsername()).build();
+            User user = new User();
+            user.setUsername(userRegDto.getUsername());
             users.add(user);
             return null;
         }).when(userService).create(userRegDto);
 
-        // Вызываем тестируемый метод.
         signupService.signup(userRegDto);
 
-        // Проверяем результат работы.
         assertEquals(1, users.size());
         assertNotNull(users.get(0));
         assertEquals(userRegDto.getUsername(), users.get(0).getUsername());
@@ -59,11 +59,9 @@ class SignupServiceImplTest {
 
     @Test
     void isFreeUsername() {
-        // Настраиваем mock.
         when(userService.findByUsername(anyString()))
                 .thenReturn(Optional.empty());
 
-        // Вызываем тестируемый метод и проверяем результат работы.
         assertTrue(signupService.isFreeUsername("somebody"));
     }
 }

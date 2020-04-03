@@ -216,12 +216,7 @@ class NoteControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        User user = User.builder()
-                .id(1)
-                .username("admin")
-                .role(Role.ADMIN)
-                .active(true)
-                .build();
+        User user = new User(1, "admin", "12345", Role.ADMIN, true);
         Note note = noteService.getById(id, user);
 
         assertEquals(id, note.getId());
@@ -239,12 +234,7 @@ class NoteControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        User user = User.builder()
-                .id(1)
-                .username("admin")
-                .role(Role.ADMIN)
-                .active(true)
-                .build();
+        User user = new User(1, "admin", "12345", Role.ADMIN, true);
         Integer id = 1;
         assertThrows(EntityNotFoundException.class, () -> noteService.getById(id, user));
     }
