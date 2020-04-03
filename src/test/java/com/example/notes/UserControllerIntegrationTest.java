@@ -31,6 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+/**
+ * Интеграционный тест для контроллера UserController
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerIntegrationTest {
@@ -45,10 +48,8 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void list() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         int usersCount = 3;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -62,13 +63,11 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void edit() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         Integer id = 2;
         String username = "user1";
         Role role = Role.USER;
         boolean active = true;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/users/edit/2"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -84,10 +83,9 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void editNoUser() throws Exception {
-        // Поймаем исключение.
         Throwable thrown = assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(get("/users/edit/901")));
-        // Проверим сообщение исключения.
+
         assertNotNull(thrown.getMessage());
         assertTrue(thrown.getMessage().contains("No user with such id!"));
         assertNotNull(thrown.getCause());
@@ -98,13 +96,11 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void update() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         Integer id = 3;
         String username = "user2";
         Role role = Role.ADMIN;
         boolean active = true;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(post("/users/update")
                 .param("id", String.valueOf(id))
                 .param("role", role.name())
@@ -113,7 +109,6 @@ class UserControllerIntegrationTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users"));
 
-        // Получим измененного пользователя и проверим результат
         UserDto userDto = userService.getById(id);
         assertEquals(id, userDto.getId());
         assertEquals(username, userDto.getUsername());
@@ -125,19 +120,17 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void updateNoUser() throws Exception {
-        // Вспомогательные данные.
         Integer id = 901;
         String username = "user2";
         Role role = Role.ADMIN;
         boolean active = true;
 
-        // Поймаем исключение.
         Throwable thrown = assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/users/update")
                         .param("id", String.valueOf(id))
                         .param("role", role.name())
                         .param("active", String.valueOf(active))));
-        // Проверим сообщение исключения.
+
         assertNotNull(thrown.getMessage());
         assertTrue(thrown.getMessage().contains("Request processing failed"));
     }
@@ -146,17 +139,14 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void disable() throws Exception {
-        // Контрольные данные (см. data_notes.sql)
         Integer id = 2;
         boolean active = false;
 
-        // Делаем вызов и проверяем результат.
         mockMvc.perform(get("/users/disable/2"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users"));
 
-        // Получим отключенного пользователя и проверим результат
         UserDto userDto = userService.getById(id);
         assertEquals(id, userDto.getId());
         assertEquals(active, userDto.isActive());
@@ -166,10 +156,9 @@ class UserControllerIntegrationTest {
     @Sql({"data_users.sql"})
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void disableNoUser() throws Exception {
-        // Поймаем исключение.
         Throwable thrown = assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(get("/users/disable/901")));
-        // Проверим сообщение исключения.
+
         assertNotNull(thrown.getMessage());
         assertTrue(thrown.getMessage().contains("Request processing failed"));
     }

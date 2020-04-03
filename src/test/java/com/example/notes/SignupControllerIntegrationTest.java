@@ -23,6 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+/**
+ * Интеграционный тест для контроллера SignupController
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class SignupControllerIntegrationTest {

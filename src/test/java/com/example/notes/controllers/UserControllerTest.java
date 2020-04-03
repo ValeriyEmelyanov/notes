@@ -38,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+/**
+ * Модульный тест контрооллера UserController
+ */
 class UserControllerTest {
     private final static String SORT_FIELD = "username";
 
@@ -64,7 +67,6 @@ class UserControllerTest {
 
     @Test
     void list() throws Exception {
-        // Подготовим данные для настройки mockMvc.
         List<UserDto> userDtos = new ArrayList<>();
         userDtos.add(new UserDto());
         userDtos.add(new UserDto());
@@ -73,11 +75,9 @@ class UserControllerTest {
         Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
         PageRequest pageRequest = PageRequest.of(0, pageSize, sort);
 
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.findAll(pageRequest))
                 .thenReturn(new PageImpl<UserDto>(userDtos, pageRequest, userDtos.size()));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -85,33 +85,29 @@ class UserControllerTest {
                 .andExpect(model().attribute("page", instanceOf(Page.class)))
                 .andExpect(model().attribute("page",
                         hasProperty("content", is(CoreMatchers.instanceOf(List.class)))));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(userService).findAll(any(Pageable.class));
     }
 
     @Test
     void edit() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         when(userService.getById(anyInt())).thenReturn(new UserDto());
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/users/edit/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("operations/usersedit"))
                 .andExpect(model().attribute("user", instanceOf(UserDto.class)))
                 .andExpect(model().attribute("roles", Role.values()));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(userService).getById(anyInt());
     }
 
     @Test
     void update() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         doAnswer((Answer<Void>) invocation -> null)
                 .when(userService).update(any(UserDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/users/update")
                 .param("id", "1")
                 .param("username", "username")
@@ -120,22 +116,20 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/users"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(userService).update(any(UserDto.class));
     }
 
     @Test
     void disable() throws Exception {
-        // Настраиваем mockMvc для вызова методов сервисного слоя из тестируемого метода.
         doAnswer((Answer<Void>) invocation -> null)
                 .when(userService).disable(anyInt());
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/users/disable/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/users"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(userService).disable(anyInt());
     }
 }

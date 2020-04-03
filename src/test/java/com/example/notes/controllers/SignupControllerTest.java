@@ -26,6 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+/**
+ * Модульный тест контрооллера SignupController
+ */
 class SignupControllerTest {
 
     @InjectMocks
@@ -50,7 +53,6 @@ class SignupControllerTest {
 
     @Test
     void signup() throws Exception {
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(get("/signup"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -60,11 +62,9 @@ class SignupControllerTest {
 
     @Test
     void signupPost() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -72,17 +72,15 @@ class SignupControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/login"));
-        // Проверякм - был один вызов метода сервисного слоя.
+
         verify(signupService).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostHasError() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -91,17 +89,15 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // Проверякм - вызова метода сервисного слоя НЕ было.
+
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostNotFree() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(false);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -110,17 +106,15 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // Проверякм - вызова метода сервисного слоя НЕ было.
+
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 
     @Test
     void signupPostNotMatching() throws Exception {
-        // Настраиваем mock для вызова методов сервисного слоя из тестируемого метода.
         when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
-        // Вызываем тестируемый метод, проверяем результат работы.
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
@@ -129,7 +123,7 @@ class SignupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))
                 .andExpect(model().hasErrors());
-        // Проверякм - вызова метода сервисного слоя НЕ было.
+
         verify(signupService, never()).signup(any(UserRegDto.class));
     }
 }
