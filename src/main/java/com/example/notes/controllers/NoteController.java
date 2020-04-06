@@ -20,17 +20,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * Контроллер заметок - текущих дел
+ * Контроллер заметок - текущих дел.
  */
 @Controller
 public class NoteController {
 
+    /**
+     * Константы для настройки параметров страницы.
+     */
     private final static int PAGE_SIZE = 10;
     private final static String SORT_FIELD = "date";
     private final static String SORT_ORDER_ASC = "ASC";
     private final static String SORT_ORDER_DESC = "DESC";
 
+    /**
+     * Сервис для работы с заметками.
+     */
     private NoteService noteService;
+
+    /**
+     * Сервис для работы с пользователями.
+     */
     private UserService userService;
 
     @Autowired
@@ -43,6 +53,15 @@ public class NoteController {
         this.userService = userService;
     }
 
+    /**
+     * Маппинг корневого каталога.
+     *
+     * @param pageable параметры страницы
+     * @param sortDateOrder поле и порядок сортировки
+     * @param filterAdjuster настройки фильтра данных страницы
+     * @param model модель
+     * @return возвращает имя страницы
+     */
     @GetMapping("/")
     public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
@@ -77,6 +96,15 @@ public class NoteController {
         return "index";
     }
 
+    /**
+     * Маппинг запроса на сортировку данных страницы.
+     *
+     * @param pageable параметры страницы
+     * @param sortDateOrder поле и порядок сортировки
+     * @param filterAdjuster настройки фильтра данных страницы
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/sort/{sortDateOrder}")
     public String sortChoose(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                              @PathVariable String sortDateOrder,
@@ -85,6 +113,15 @@ public class NoteController {
         return list(pageable, sortDateOrder, filterAdjuster, model);
     }
 
+    /**
+     * Маппинг запроса на список заметок.
+     *
+     * @param pageable параметры страницы
+     * @param sortDateOrder поле и порядок сортировки
+     * @param filterAdjuster настройки фильтра данных страницы
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/list")
     public String page(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "ASC") String sortDateOrder,
@@ -93,11 +130,22 @@ public class NoteController {
         return list(pageable, sortDateOrder, filterAdjuster, model);
     }
 
+    /**
+     * Маппинг запроса страницы ввода новой заметки.
+     *
+     * @return имя страницы
+     */
     @GetMapping("/new")
     public String newNote() {
         return "operations/new";
     }
 
+    /**
+     * Маппинг запроса на сохранение заметки.
+     *
+     * @param message текст заметки
+     * @return перенаправляет на корневую страницу
+     */
     @PostMapping("/save")
     public String save(@RequestParam String message) {
         User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
@@ -105,6 +153,13 @@ public class NoteController {
         return "redirect:/";
     }
 
+    /**
+     * Маппинг запроса страницы редактирования заметки.
+     *
+     * @param id идентификатор заметки
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
@@ -113,6 +168,14 @@ public class NoteController {
         return "operations/edit";
     }
 
+    /**
+     * Маппинг запроса на сохранение измененной заметки.
+     *
+     * @param id идентификатор заметки
+     * @param message текст заметки
+     * @param done отметка о выполнении
+     * @return перенаправляет на корневую страницу
+     */
     @PostMapping("/update")
     public String update(@RequestParam Integer id, @RequestParam String message,
                          @RequestParam(value = "done", required = false) boolean done) {
@@ -121,6 +184,12 @@ public class NoteController {
         return "redirect:/";
     }
 
+    /**
+     * Маппинг запроса на удаление заметки.
+     *
+     * @param id идентификатор заметки
+     * @return перенаправляет на корневую страницу
+     */
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);

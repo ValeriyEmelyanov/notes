@@ -1,7 +1,16 @@
 package com.example.notes.filtering;
 
+/**
+ * Настройки фильтра заметок.
+ */
 public class FilterAdjuster {
+    /**
+     * Значение для контекстного поиска по тексту заметки.
+     */
     private String searchText;
+    /**
+     * Значение для поиска по признаку выполнения заметки (задания).
+     */
     private DoneFilterOption done;
 
     public FilterAdjuster() {
@@ -30,6 +39,11 @@ public class FilterAdjuster {
         this.done = done;
     }
 
+    /**
+     * Определяет выводим все записи (без фильтров) или нет.
+     *
+     * @return истина, если нет никаких фильтров
+     */
     public boolean isAll() {
         return (searchText == null || searchText.isEmpty()) &&
                 (done == null || done == DoneFilterOption.ALL);

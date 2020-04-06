@@ -7,9 +7,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Контроллер аутентификации пользователей.
+ */
 @Controller
 public class LoginController {
 
+    /**
+     * Маппинг входа в систему.
+     *
+     * @param authentication объект аутентификации
+     * @param request запрос
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/login")
     public String login(Authentication authentication, HttpServletRequest request, ModelMap model) {
         if (authentication != null) {

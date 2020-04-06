@@ -15,13 +15,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
 /**
- * Контроллер для регистрации пользователей
+ * Контроллер для регистрации пользователей.
  */
 @Controller
 public class SignupController {
 
+    /**
+     * Логгер
+     */
     private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
 
+    /**
+     * Сервис для регистрации пользователей.
+     */
     private SignupService signupService;
 
     @Autowired
@@ -29,12 +35,25 @@ public class SignupController {
         this.signupService = signupService;
     }
 
+    /**
+     * Маппинг запроса страницы на регистрацию.
+     *
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("user", new UserRegDto());
         return "signup";
     }
 
+    /**
+     * Маппинг запроса на регистрацию пользователя.
+     *
+     * @param userRegDto регистрационные данные пользователя
+     * @param result
+     * @return
+     */
     @PostMapping("/signup")
     public String signup(@ModelAttribute("user") @Valid UserRegDto userRegDto, BindingResult result) {
         logger.info("Request to register a new user: {}", userRegDto.getUsername());

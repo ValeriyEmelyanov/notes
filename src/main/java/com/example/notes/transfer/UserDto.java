@@ -3,8 +3,7 @@ package com.example.notes.transfer;
 import com.example.notes.persist.entities.Role;
 
 /**
- * Класс для передачи данных пользователя на слой представления.
- * Так же возврат измененных данных пользователя из слоя представления.
+ * Класс для передачи данных пользователя между представлением и бэкэндом.
  */
 public class UserDto {
     private Integer id;

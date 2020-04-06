@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * Сущность заметки (запись о деле, которое необхоимо сделать)
+ * Сущность заметки (запись о деле, которое необхоимо сделать).
  */
 @Entity
 @Table(name = "notes")

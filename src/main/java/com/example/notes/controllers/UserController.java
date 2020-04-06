@@ -18,14 +18,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 /**
- * Контроллер аккаунтов пользователей
+ * Контроллер аккаунтов пользователей.
  */
 @Controller
 public class UserController {
 
+    /**
+     * Константы для настройки параметров страницы.
+     */
     private final static int PAGE_SIZE = 10;
     private final static String SORT_FIELD = "username";
 
+    /**
+     * Сервис для работы с пользователями.
+     */
     private UserService userService;
 
     @Autowired
@@ -33,6 +39,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Маппинг запроса списка пользователей.
+     *
+     * @param pageable параметры страницы
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/users")
     public String list(@PageableDefault(size = PAGE_SIZE) Pageable pageable,
                        Model model) {
@@ -44,6 +57,13 @@ public class UserController {
         return "users";
     }
 
+    /**
+     * Маппинг запроса сраницы редактироания пользователя.
+     *
+     * @param id идентификатор пользователя
+     * @param model модель
+     * @return имя страницы
+     */
     @GetMapping("/users/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         UserDto userDto = userService.getById(id);
@@ -52,12 +72,24 @@ public class UserController {
         return "operations/usersedit";
     }
 
+    /**
+     * Маппинг запроса на сохранение измененных данных пользователя.
+     *
+     * @param userDto данные пользователя
+     * @return перенаправляет на страницу списка пользователей
+     */
     @PostMapping("/users/update")
     public String update(@ModelAttribute("user") UserDto userDto) {
         userService.update(userDto);
         return "redirect:/users";
     }
 
+    /**
+     * Маппинг запроса на удаление пользователя.
+     *
+     * @param id идентификатор пользователя.
+     * @return перенаправляет на страницу списка пользователей
+     */
     @GetMapping("/users/disable/{id}")
     public String disable(@PathVariable Integer id) {
         userService.disable(id);

@@ -9,13 +9,19 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * Сервис для регистрации пользователей
+ * Сервис регистрации пользователей.
  */
 @Service
 @Transactional
 public class SignupServiceImpl implements SignupService {
+    /**
+     * Логгер.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SignupServiceImpl.class);
 
+    /**
+     * Сервис работы с пользователями.
+     */
     private UserService userService;
 
     @Autowired
@@ -23,21 +29,12 @@ public class SignupServiceImpl implements SignupService {
         this.userService = userService;
     }
 
-    /**
-     * Регистрация полльзователя: шифруется пароль, в базе данных сохраняется новый пользователь.
-     * @param userRegDto   Данные регистрируемого пользователя
-     */
     @Override
     public void signup(UserRegDto userRegDto) {
         userService.create(userRegDto);
         logger.info("New user is saved: {}", userRegDto.getUsername());
     }
 
-    /**
-     * Проверяется, что имя пользователя еще не используется
-     * @param username  Имя пользователя
-     * @return          Возвращаеи ИСТИНА, если в базе данных нет пользователя с указанным именем
-     */
     @Override
     public boolean isFreeUsername(String username) {
         return !userService.findByUsername(username).isPresent();

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Репозиторий заметок
+ * Репозиторий заметок.
  */
 public interface NoteRepository extends JpaRepository<Note, Integer> {
 

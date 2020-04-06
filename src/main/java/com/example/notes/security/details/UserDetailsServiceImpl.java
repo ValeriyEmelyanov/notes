@@ -7,9 +7,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для работы с пользователями безопасности.
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    /**
+     * Репозиторий пользователей.
+     */
     private UserRepository userRepository;
 
     @Autowired

@@ -13,12 +13,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * Реализация сервиса заметок
+ * Реализация сервиса заметок.
  */
 @Service
 @Transactional
 public class NoteServiceImpl implements NoteService {
 
+    /**
+     * Репозиторий заметок
+     */
     private NoteRepository repository;
 
     @Autowired

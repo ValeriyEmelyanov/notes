@@ -8,8 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Пользователь безопасности.
+ */
 public class UserDetailsImpl implements UserDetails {
 
+    /**
+     * Пользователь, соответствующий пользователю безопасности.
+     */
     private User user;
 
     public UserDetailsImpl(User user) {
