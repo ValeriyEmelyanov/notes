@@ -36,9 +36,4 @@ public class SignupServiceImpl implements SignupService {
         userService.create(userRegDto);
         logger.info("New user is saved: {}", userRegDto.getUsername());
     }
-
-    @Override
-    public boolean isFreeUsername(String username) {
-        return !userService.findByUsername(username).isPresent();
-    }
 }

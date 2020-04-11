@@ -2,6 +2,7 @@ package com.example.notes.controllers;
 
 import com.example.notes.services.SignupService;
 import com.example.notes.transfer.UserRegDto;
+import com.example.notes.utils.SignupValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,15 +11,15 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,6 +37,9 @@ class SignupControllerTest {
 
     @Mock
     SignupService signupService;
+
+    @Mock
+    private SignupValidator signupValidator;
 
     private MockMvc mockMvc;
 
@@ -62,7 +66,6 @@ class SignupControllerTest {
 
     @Test
     void signupPost() throws Exception {
-        when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
 
         mockMvc.perform(post("/signup")
@@ -78,47 +81,16 @@ class SignupControllerTest {
 
     @Test
     void signupPostHasError() throws Exception {
-        when(signupService.isFreeUsername(anyString())).thenReturn(true);
         doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
+
+        BindingResult result = new BeanPropertyBindingResult(new UserRegDto(), "user");
+        result.rejectValue("password", "", "Password not matching");
 
         mockMvc.perform(post("/signup")
                 .param("username", "newer")
                 .param("password", "12345")
-                .param("matchingPassword", ""))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("signup"))
-                .andExpect(model().hasErrors());
-
-        verify(signupService, never()).signup(any(UserRegDto.class));
-    }
-
-    @Test
-    void signupPostNotFree() throws Exception {
-        when(signupService.isFreeUsername(anyString())).thenReturn(false);
-        doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
-
-        mockMvc.perform(post("/signup")
-                .param("username", "newer")
-                .param("password", "12345")
-                .param("matchingPassword", "12345"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("signup"))
-                .andExpect(model().hasErrors());
-
-        verify(signupService, never()).signup(any(UserRegDto.class));
-    }
-
-    @Test
-    void signupPostNotMatching() throws Exception {
-        when(signupService.isFreeUsername(anyString())).thenReturn(true);
-        doAnswer((Answer<Void>) invocation -> null).when(signupService).signup(any(UserRegDto.class));
-
-        mockMvc.perform(post("/signup")
-                .param("username", "newer")
-                .param("password", "12345")
-                .param("matchingPassword", "54321"))
+                .param("matchingPassword", "")
+                .flashAttr("result", result))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"))

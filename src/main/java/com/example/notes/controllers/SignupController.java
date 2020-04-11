@@ -2,6 +2,7 @@ package com.example.notes.controllers;
 
 import com.example.notes.services.SignupService;
 import com.example.notes.transfer.UserRegDto;
+import com.example.notes.utils.SignupValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,19 @@ public class SignupController {
      */
     private SignupService signupService;
 
+    /**
+     * Валидатор данных регистрируемого пользователя.
+     */
+    private SignupValidator signupValidator;
+
     @Autowired
     public void setSignupService(SignupService signupService) {
         this.signupService = signupService;
+    }
+
+    @Autowired
+    public void setSignupValidator(SignupValidator signupValidator) {
+        this.signupValidator = signupValidator;
     }
 
     /**
@@ -58,17 +69,8 @@ public class SignupController {
     public String signup(@ModelAttribute("user") @Valid UserRegDto userRegDto, BindingResult result) {
         logger.info("Request to register a new user: {}", userRegDto.getUsername());
 
+        signupValidator.validate(userRegDto, result);
         if (result.hasErrors()) {
-            return "signup";
-        }
-
-        if (!signupService.isFreeUsername(userRegDto.getUsername())) {
-            result.rejectValue("username", "", String.format("User %s already exists!", userRegDto.getUsername()));
-            return "signup";
-        }
-
-        if (!userRegDto.getPassword().equals(userRegDto.getMatchingPassword())) {
-            result.rejectValue("password", "", "Password not matching");
             return "signup";
         }
 

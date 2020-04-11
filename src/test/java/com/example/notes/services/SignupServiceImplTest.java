@@ -12,14 +12,10 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 
 /**
  * Модульный тест сервиса SignupServiceImpl
@@ -56,13 +52,5 @@ class SignupServiceImplTest {
         assertEquals(1, users.size());
         assertNotNull(users.get(0));
         assertEquals(userRegDto.getUsername(), users.get(0).getUsername());
-    }
-
-    @Test
-    void isFreeUsername() {
-        when(userService.findByUsername(anyString()))
-                .thenReturn(Optional.empty());
-
-        assertTrue(signupService.isFreeUsername("somebody"));
     }
 }
