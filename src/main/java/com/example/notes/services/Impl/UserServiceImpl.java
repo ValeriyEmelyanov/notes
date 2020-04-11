@@ -1,8 +1,9 @@
-package com.example.notes.services;
+package com.example.notes.services.Impl;
 
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.UserRepository;
+import com.example.notes.services.UserService;
 import com.example.notes.transfer.UserDto;
 import com.example.notes.transfer.UserRegDto;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,7 @@ package com.example.notes.services;
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.UserRepository;
+import com.example.notes.services.Impl.UserServiceImpl;
 import com.example.notes.transfer.UserDto;
 import com.example.notes.transfer.UserRegDto;
 import org.junit.jupiter.api.BeforeEach;

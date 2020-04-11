@@ -1,10 +1,11 @@
-package com.example.notes.services;
+package com.example.notes.services.Impl;
 
 import com.example.notes.filtering.DoneFilterOption;
 import com.example.notes.filtering.FilterAdjuster;
 import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.NoteRepository;
+import com.example.notes.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

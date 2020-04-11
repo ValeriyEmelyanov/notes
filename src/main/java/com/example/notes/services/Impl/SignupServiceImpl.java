@@ -1,5 +1,7 @@
-package com.example.notes.services;
+package com.example.notes.services.Impl;
 
+import com.example.notes.services.SignupService;
+import com.example.notes.services.UserService;
 import com.example.notes.transfer.UserRegDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

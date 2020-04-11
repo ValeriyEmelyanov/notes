@@ -6,6 +6,7 @@ import com.example.notes.persist.entities.Note;
 import com.example.notes.persist.entities.Role;
 import com.example.notes.persist.entities.User;
 import com.example.notes.persist.repositories.NoteRepository;
+import com.example.notes.services.Impl.NoteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
