@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -228,8 +229,8 @@ class NoteControllerIntegrationTest {
     @Test
     @Sql({"data_users.sql", "data_notes.sql"})
     @WithMockUser(username = "admin")
-    void delete() throws Exception {
-        mockMvc.perform(get("/delete/1"))
+    void deleteTest() throws Exception {
+        mockMvc.perform(delete("/delete/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));

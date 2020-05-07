@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -142,7 +143,7 @@ class UserControllerIntegrationTest {
         Integer id = 2;
         boolean active = false;
 
-        mockMvc.perform(get("/users/disable/2"))
+        mockMvc.perform(patch("/users/disable/2"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users"));
@@ -157,7 +158,7 @@ class UserControllerIntegrationTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void disableNoUser() throws Exception {
         Throwable thrown = assertThrows(NestedServletException.class,
-                () -> mockMvc.perform(get("/users/disable/901")));
+                () -> mockMvc.perform(patch("/users/disable/901")));
 
         assertNotNull(thrown.getMessage());
         assertTrue(thrown.getMessage().contains("Request processing failed"));

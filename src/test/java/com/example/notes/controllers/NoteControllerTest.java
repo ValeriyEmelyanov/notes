@@ -35,6 +35,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -210,12 +211,12 @@ class NoteControllerTest {
     }
 
     @Test
-    void delete() throws Exception {
+    void deleteTest() throws Exception {
         when(userService.getCurrentUser()).thenReturn(Optional.of(new User()));
         doAnswer((Answer<Void>) invocation -> null)
                 .when(noteService).delete(anyInt(), any(User.class));
 
-        mockMvc.perform(get("/delete/1"))
+        mockMvc.perform(delete("/delete/1"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));

@@ -105,7 +105,30 @@
 <a href="https://stackoverflow.com/questions/25249902/mockito-issue-whenjava-lang-void-in-stubber-cannot-be-applied-to-void">Mockito issue - when(java.lang.Void) in Stubber cannot be applied to void</a>
 * Как при тестировании подтасовать аутентификацию?:
 <a href="https://www.javacodegeeks.com/2017/05/mocking-spring-security-context-unit-testing.html">Mocking Spring Security Context for Unit Testing</a>
- 
+* Чтобы при удалении данных избежать использования http-метода GET, 
+нашел следующее решение: 
+<br> a) в application.properties добавляю строку <br>
+`spring.mvc.hiddenmethod.filter.enabled=true`
+<br> б) на странице использую конструкцию  
+---
+    <form th:action="@{'/delete/{id}'(id=${note.id})}" th:method="delete">
+        <button type="submit" class="btn-link">
+            <i class="fa fa-trash" style="font-size: 20px;"></i>
+        </button>
+    </form>
+---
+которая превратиться в соответствующий html-код:
+
+---
+    <form action="/delete/12" method="post">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit" class="btn-link">
+            <i class="fa fa-trash" style="font-size: 20px;"></i>
+        </button>
+    </form>
+---
+в) в контроллере для метода-обработчика использую соответствующую аннотацию @DeleteMapping.
+
  
 ### Полезные ссылки
 
