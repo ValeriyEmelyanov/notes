@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -209,7 +210,7 @@ class NoteControllerIntegrationTest {
         String message = "Note 1 updated";
         boolean done = true;
 
-        mockMvc.perform(post("/update")
+        mockMvc.perform(put("/update")
                 .param("id", String.valueOf(id))
                 .param("message", message)
                 .param("done", String.valueOf(done)))

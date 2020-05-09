@@ -38,6 +38,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -199,7 +200,7 @@ class NoteControllerTest {
         doAnswer((Answer<Void>) invocation -> null)
                 .when(noteService).update(anyInt(), anyString(), anyBoolean(), any(User.class));
 
-        mockMvc.perform(post("/update")
+        mockMvc.perform(put("/update")
                 .param("id", "1")
                 .param("message", "new message")
                 .param("done", "true"))

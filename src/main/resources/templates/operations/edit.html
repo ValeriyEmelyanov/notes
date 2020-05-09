@@ -6,8 +6,8 @@
 <div class="container">
     <div th:replace="fragments/header :: header"></div>
     <div class="container">
-        <form class="form-horizontal" th:object="${note}" th:action="@{/update}" name="edit_form" id="edit_form"
-              method="post" role="form">
+        <form class="form-horizontal" th:object="${note}" th:action="@{/update}" th:method="put"
+              name="edit_form" id="edit_form" method="post" role="form">
             <div class="form-group">
                 <input type="hidden" id="id" th:name="id" th:value="*{id}"/>
             </div>

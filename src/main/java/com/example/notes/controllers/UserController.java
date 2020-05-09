@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 /**
@@ -79,7 +79,7 @@ public class UserController {
      * @param userDto данные пользователя
      * @return перенаправляет на страницу списка пользователей
      */
-    @PostMapping("/users/update")
+    @PutMapping("/users/update")
     public String update(@ModelAttribute("user") UserDto userDto) {
         userService.update(userDto);
         return "redirect:/users";

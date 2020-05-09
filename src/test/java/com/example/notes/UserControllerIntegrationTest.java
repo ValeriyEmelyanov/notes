@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -102,7 +102,7 @@ class UserControllerIntegrationTest {
         Role role = Role.ADMIN;
         boolean active = true;
 
-        mockMvc.perform(post("/users/update")
+        mockMvc.perform(put("/users/update")
                 .param("id", String.valueOf(id))
                 .param("role", role.name())
                 .param("active", String.valueOf(active)))
@@ -127,7 +127,7 @@ class UserControllerIntegrationTest {
         boolean active = true;
 
         Throwable thrown = assertThrows(NestedServletException.class,
-                () -> mockMvc.perform(post("/users/update")
+                () -> mockMvc.perform(put("/users/update")
                         .param("id", String.valueOf(id))
                         .param("role", role.name())
                         .param("active", String.valueOf(active))));

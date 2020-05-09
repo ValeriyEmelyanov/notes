@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -109,7 +109,7 @@ class UserControllerTest {
         doAnswer((Answer<Void>) invocation -> null)
                 .when(userService).update(any(UserDto.class));
 
-        mockMvc.perform(post("/users/update")
+        mockMvc.perform(put("/users/update")
                 .param("id", "1")
                 .param("username", "username")
                 .param("role", "USER")

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -177,7 +178,7 @@ public class NoteController {
      * @param done отметка о выполнении
      * @return перенаправляет на корневую страницу
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String update(@RequestParam Integer id, @RequestParam String message,
                          @RequestParam(value = "done", required = false) boolean done) {
         User user = userService.getCurrentUser().orElseThrow(IllegalArgumentException::new);
